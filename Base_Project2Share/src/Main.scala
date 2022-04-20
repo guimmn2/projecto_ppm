@@ -80,8 +80,14 @@ class Main extends Application {
     box1.setTranslateZ(5)
     box1.setMaterial(greenMaterial)
 
+    val box2 = new Box(5, 5, 5)  //
+    box2.setTranslateX(0)
+    box2.setTranslateY(0)
+    box2.setTranslateZ(0)
+    box2.setMaterial(redMaterial)
+
     // 3D objects (group of nodes - javafx.scene.Node) that will be provide to the subScene
-    val worldRoot:Group = new Group(wiredBox, camVolume, lineX, lineY, lineZ, cylinder1, box1)
+    val worldRoot:Group = new Group(wiredBox, camVolume, lineX, lineY, lineZ, cylinder1, box1, box2)
 
     // Camera
     val camera = new PerspectiveCamera(true)
@@ -136,14 +142,17 @@ class Main extends Application {
     stage.setScene(scene)
     stage.show
 
-/*
+
     //oct1 - example of an Octree[Placement] that contains only one Node (i.e. cylinder1)
     //In case of difficulties to implement task T2 this octree can be used as input for tasks T3, T4 and T5
 
     val placement1: Placement = ((0, 0, 0), 8.0)
     val sec1: Section = (((0.0,0.0,0.0), 4.0), List(cylinder1.asInstanceOf[Node]))
+    val sec2: Section = (((0.0,0.0,0.0), 800.0), List(box2.asInstanceOf[Node]))
     val ocLeaf1 = OcLeaf(sec1)
-    val oct1:Octree[Placement] = OcNode[Placement](placement1, ocLeaf1, OcEmpty, OcEmpty, OcEmpty, OcEmpty, OcEmpty, OcEmpty, OcEmpty)
+    val ocLeaf2 = OcLeaf(sec2)
+    val oct1:Octree[Placement] = OcNode[Placement](placement1, ocLeaf1, ocLeaf2, OcEmpty, OcEmpty, OcEmpty, OcEmpty, OcEmpty, OcEmpty)
+    val oct2:Octree[Placement] = oct1
 
     //example of bounding boxes (corresponding to the octree oct1) added manually to the world
     val b2 = new Box(8,8,8)
@@ -165,7 +174,7 @@ class Main extends Application {
     //adding boxes b2 and b3 to the world
     worldRoot.getChildren.add(b2)
     worldRoot.getChildren.add(b3)
-*/
+
   }
 
   override def init(): Unit = {
