@@ -89,6 +89,9 @@ class Main extends Application {
     // 3D objects (group of nodes - javafx.scene.Node) that will be provide to the subScene
     val worldRoot:Group = new Group(wiredBox, camVolume, lineX, lineY, lineZ, cylinder1, box1, box2)
 
+    //TODO
+    FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt").map(x => worldRoot.getChildren.add(x))
+
     // Camera
     val camera = new PerspectiveCamera(true)
 
