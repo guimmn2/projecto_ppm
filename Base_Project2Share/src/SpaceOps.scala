@@ -30,26 +30,41 @@ object SpaceOps {
 
   def areModelsWithin(list: List[Node], box: Box): Boolean = !filterModelsWithin(list, box).equals(List())
 
-  def subSections(box: Box): List[Box] = {
-    val subSize = box.getWidth / 2
+  def subSections(placement: Placement): List[Box] = {
+    val sub = subPlacements(placement)
     List[Box](
-      createBox(((0.0, 0.0, 0.0), subSize)),
-      createBox(((0.0, 0.0, subSize), subSize)),
-      createBox(((0.0, subSize, 0.0), subSize)),
-      createBox(((0.0, subSize, subSize), subSize)),
-      createBox(((subSize, 0.0, 0.0), subSize)),
-      createBox(((subSize, 0.0, subSize), subSize)),
-      createBox(((subSize, subSize, 0.0), subSize)),
-      createBox(((subSize, subSize, subSize), subSize)),
+      createBox(sub(0)),
+      createBox(sub(1)),
+      createBox(sub(2)),
+      createBox(sub(3)),
+      createBox(sub(4)),
+      createBox(sub(5)),
+      createBox(sub(6)),
+      createBox(sub(7)),
     )
   }
 
-  def isModelInAppropriateBox(model: Node, box: Box): Boolean = {
-    if(isWithin(model, box)) (subSections(box) foldRight List[Boolean]()) (intersects(model, _) :: _).filter(b => b == true).length >= 1
+  def subPlacements(placement: Placement): List[Placement] = {
+    val subSize = placement._2 / 2
+    val x = placement._1._1; val y = placement._1._2; val z = placement._1._3;
+    List(
+      ((x, y, z), subSize),
+      ((x + subSize, y, z), subSize),
+      ((x, y + subSize, z), subSize),
+      ((x, y, z + subSize), subSize),
+      ((x + subSize, y + subSize, z), subSize),
+      ((x, y + subSize, z + subSize), subSize),
+      ((x + subSize, y, z + subSize), subSize),
+      ((x + subSize, y + subSize, z + subSize), subSize),
+    )
+  }
+
+  def isModelInAppropriatePlacement(model: Node, placement: Placement): Boolean = {
+    if (isWithin(model, createBox(placement))) (subSections(placement) foldRight List[Boolean]()) (intersects(model, _) :: _).filter(b => b == true).length >= 1
     else false
   }
 
-  def filterAppropriateModelsForBox(list: List[Node], box: Box): List[Node] = list.filter(m => isModelInAppropriateBox(m, box) == true)
+  def filterAppropriateModelsForPlacement(list: List[Node], placement: Placement): List[Node] = list.filter(m => isModelInAppropriatePlacement(m, placement) == true)
 
 
   def printModels(list: List[Node]): Unit = list.foreach(m => println(m))

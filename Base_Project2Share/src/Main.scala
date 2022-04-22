@@ -180,25 +180,18 @@ class Main extends Application {
     println(s"is cylinder intersecting cylinder box? ${SpaceOps.intersects(cylinder1, cylinderBox)}")
     println(s"is cylinder intersecting intersecBox? ${SpaceOps.intersects(cylinder1, intersectingBox)}")
     println(s"are any models within cylinder box? ${SpaceOps.areModelsWithin(List(cylinder1), cylinderBox)}")
-    println(s"is cylinder appropriately in cylinderBox? ${SpaceOps.isModelInAppropriateBox(cylinder1, cylinderBox)}")
-    println(s"is cylinder appropriately in root? ${SpaceOps.isModelInAppropriateBox(cylinder1, wiredBox)}")
-    println(s"is cylinder appropriately in b2? ${SpaceOps.isModelInAppropriateBox(cylinder1, b2)}")
-    println(s"is cylinder appropriately in adjB3? ${SpaceOps.isModelInAppropriateBox(cylinder1, adjB3)}")
-    println(s"is cylinder appropriately in intersectingBox? ${SpaceOps.isModelInAppropriateBox(cylinder1, intersectingBox)}")
-    println(s"is adjB3 appropriately in cylinderBox? ${SpaceOps.isModelInAppropriateBox(adjB3, cylinderBox)}")
     print("models within cylinderBox: ")
     SpaceOps.printModels(SpaceOps.filterModelsWithin(List(cylinder1),cylinderBox))
     print("models appropriate for cylinderBox: ")
-    SpaceOps.printModels(SpaceOps.filterAppropriateModelsForBox(List(cylinder1, wiredBox, adjB3), cylinderBox))
 
 
-    //SpaceOps.subSections(cylinderBox).foreach(m => worldRoot.getChildren.add(m))
+    SpaceOps.subSections((0.0, 0.0, 8.0), 8).foreach(m => worldRoot.getChildren.add(m))
 
     //adding boxes b2 and b3 to the world
     worldRoot.getChildren.add(b2)
     //worldRoot.getChildren.add(b3)
-    worldRoot.getChildren.add(cylinderBox)
-    worldRoot.getChildren.add(intersectingBox)
+    //worldRoot.getChildren.add(cylinderBox)
+    //worldRoot.getChildren.add(intersectingBox)
     worldRoot.getChildren.add(adjB3)
 
   }
