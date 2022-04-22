@@ -34,12 +34,12 @@ object OctreeOps {
   def main(args: Array[String]): Unit = {
 
     val cylinder1 = new Cylinder(0.5, 1, 10)
-    cylinder1.setTranslateX(3)
-    cylinder1.setTranslateY(3)
-    cylinder1.setTranslateZ(3)
-    cylinder1.setScaleX(3)
-    cylinder1.setScaleY(3)
-    cylinder1.setScaleZ(3)
+    cylinder1.setTranslateX(2)
+    cylinder1.setTranslateY(2)
+    cylinder1.setTranslateZ(2)
+    cylinder1.setScaleX(2)
+    cylinder1.setScaleY(2)
+    cylinder1.setScaleZ(2)
 
     generateOcTree(((0.0, 0.0, 0.0), 32), List(cylinder1), 6)
   }
