@@ -66,7 +66,7 @@ class Main extends Application {
     wiredBox.setDrawMode(DrawMode.LINE)
 
     val cylinder1 = new Cylinder(0.5, 1, 10)
-    cylinder1.setTranslateX(2)
+    cylinder1.setTranslateX(6)
     cylinder1.setTranslateY(2)
     cylinder1.setTranslateZ(2)
     cylinder1.setScaleX(2)
@@ -180,9 +180,11 @@ class Main extends Application {
     println(s"is cylinder intersecting cylinder box? ${SpaceOps.intersects(cylinder1, cylinderBox)}")
     println(s"is cylinder intersecting intersecBox? ${SpaceOps.intersects(cylinder1, intersectingBox)}")
     println(s"are any models within cylinder box? ${SpaceOps.areModelsWithin(List(cylinder1), cylinderBox)}")
+    println(s"is adjB3 within cylinderBox? ${SpaceOps.isWithin(adjB3, cylinderBox)}")
     print("models within cylinderBox: ")
     SpaceOps.printModels(SpaceOps.filterModelsWithin(List(cylinder1),cylinderBox))
     print("models appropriate for cylinderBox: ")
+    SpaceOps.printModels(SpaceOps.filterAppropriateModelsForPlacement(List(cylinder1, cylinderBox, adjB3, cylinder1), ((0.0, 0.0, 0.0), 4)))
 
 
     SpaceOps.subSections((0.0, 0.0, 8.0), 8).foreach(m => worldRoot.getChildren.add(m))
@@ -190,8 +192,8 @@ class Main extends Application {
     //adding boxes b2 and b3 to the world
     worldRoot.getChildren.add(b2)
     //worldRoot.getChildren.add(b3)
-    //worldRoot.getChildren.add(cylinderBox)
-    //worldRoot.getChildren.add(intersectingBox)
+    worldRoot.getChildren.add(cylinderBox)
+    worldRoot.getChildren.add(intersectingBox)
     worldRoot.getChildren.add(adjB3)
 
   }
