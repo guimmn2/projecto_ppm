@@ -160,8 +160,7 @@ class Main extends Application {
     b2.setMaterial(redMaterial)
     b2.setDrawMode(DrawMode.LINE)
 
-    val b2c = Model.boxFromPlacement(sec1._1)
-
+    val sec1Box = Model.boxFromPlacement(sec1._1)
 
     val b3 = new Box(4,4,4)
     //translate because it is added by defaut to the coords (0,0,0)
@@ -171,10 +170,24 @@ class Main extends Application {
     b3.setMaterial(greenMaterial)
     b3.setDrawMode(DrawMode.LINE)
 
+    val b3Adj = new Box(4, 4, 4)
+    b3Adj.setTranslateX(4 + 2)
+    b3Adj.setTranslateY(2)
+    b3Adj.setTranslateZ(2)
+    b3Adj.setMaterial(greenMaterial)
+    b3Adj.setDrawMode(DrawMode.LINE)
+
     //adding boxes b2 and b3 to the world
     worldRoot.getChildren.add(b2)
     worldRoot.getChildren.add(b3)
-    worldRoot.getChildren.add(b2c)
+    worldRoot.getChildren.add(b3Adj)
+    worldRoot.getChildren.add(sec1Box)
+
+    //childrenPlacement working?
+    OctreeOps.childrenNodePlacements((0.0, 0.0, 0.0),32).map((p => {
+      println((s"${p._1}"))
+      worldRoot.getChildren.add(Model.boxFromPlacement(p))
+    }))
 
   }
 

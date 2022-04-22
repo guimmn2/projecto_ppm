@@ -36,22 +36,17 @@ object OctreeOps {
     }
   }
 
-  private def childrenNodePlacements(placement: Placement): List[Placement] = {
-    val size = placement._2 / 2
-
-    val x = placement._1._1 / 2
-    val y = placement._1._2 / 2
-    val z = placement._1._3 / 2
-
+   def childrenNodePlacements(placement: Placement): List[Placement] = {
+    val subSize = placement._2 / 2
     List(
-      ((0.0, 0.0, 0.0), size),
-      ((0.0, 0.0, z), size),
-      ((0.0, y, 0.0), size),
-      ((0.0, y, z), size),
-      ((x, 0.0, 0.0), size),
-      ((x, 0.0, z), size),
-      ((x, y, 0.0), size),
-      ((x, y, z), size),
+      ((0.0, 0.0, 0.0), subSize),
+      ((0.0, 0.0, subSize), subSize),
+      ((0.0, subSize, 0.0), subSize),
+      ((0.0, subSize, subSize), subSize),
+      ((subSize, 0.0, 0.0), subSize),
+      ((subSize, 0.0, subSize), subSize),
+      ((subSize, subSize, 0.0), subSize),
+      ((subSize, subSize, subSize), subSize),
     )
   }
 
