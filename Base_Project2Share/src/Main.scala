@@ -81,7 +81,7 @@ class Main extends Application {
     box1.setMaterial(greenMaterial)
 
     // 3D objects (group of nodes - javafx.scene.Node) that will be provide to the subScene
-    val worldRoot:Group = new Group(wiredBox, camVolume, lineX, lineY, lineZ, cylinder1, box1)
+    val worldRoot:Group = new Group(wiredBox, camVolume, lineX, lineY, lineZ, box1)
 
     //loads objects into world
     FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt").map(x => worldRoot.getChildren.add(x))
@@ -160,7 +160,7 @@ class Main extends Application {
     b2.setMaterial(redMaterial)
     b2.setDrawMode(DrawMode.LINE)
 
-    val placement1Box = Model.boxFromPlacement(placement1)
+    val placement1Box = Model.boxFromPlacement((0.0, 0.0, 0.0), 8)
 
     val b3 = new Box(4,4,4)
     //translate because it is added by defaut to the coords (0,0,0)
@@ -191,6 +191,8 @@ class Main extends Application {
     bigBox.setDrawMode(DrawMode.LINE)
 
     //Tests and stuff
+    /*
+    Intersects
     println(s"cylinder1 intersecting sec1 box ? ${Model.intersectsPlacement(cylinder1, sec1._1)}")
     println(s"cylinder1 intersecting adjacent box? ${Model.intersects(cylinder1, b3Adj)}")
     println(s"adjacent box intersecting cylinder1? ${Model.intersects(b3Adj, cylinder1)}")
@@ -202,16 +204,28 @@ class Main extends Application {
     println(s"first subsection intersecting cylinder1? ${Model.intersects(Model.boxFromPlacement(Model.childrenNodePlacements(sec1._1)(0)), cylinder1)}")
     println(s"bigBox inside root? ${Model.isWithin(bigBox, Model.boxFromPlacement((0.0,0.0,0.0),32))}")
     println(s"bigBox intersecting last root subsection? ${Model.intersects(bigBox, Model.boxFromPlacement(Model.childrenNodePlacements((0.0, 0.0, 0.0), 32)(7)))}")
+     */
+    /*
+    IsAppropriate
+    println(s"is root appropriate for cylinder1? ${Model.isAppropriatePlacement(cylinder1, ((0.0, 0.0, 0.0), 32))}")
+    println(s"is placement1 appropriate for cylinder1? ${Model.isAppropriatePlacement(cylinder1, placement1)}")
+    println(s"is sec1 appropriate for cylinder1? ${Model.isAppropriatePlacement(cylinder1, sec1._1)}")
+    println(s"is child of sec1 appropriate for cylinder1? ${Model.isAppropriatePlacement(cylinder1, Model.childrenNodePlacements(sec1._1)(0))}")
+    Model.printModels(Model.listAppropriateModelsForPlacement(List(cylinder1, box1), sec1._1)).getClass
+     */
 
+    /*
     worldRoot.getChildren.add(Model.boxFromPlacement(Model.childrenNodePlacements(sec1._1)(0)))
     worldRoot.getChildren.add(Model.boxFromPlacement(Model.childrenNodePlacements(sec1._1)(7)))
     worldRoot.getChildren.add(bigBox)
+     */
 
     //childrenPlacement working? YES
+    /*
     Model.childrenNodePlacements(((0.0, 0.0, 0.0), 32)).map((p => {
-      println((s"${p._1}"))
       worldRoot.getChildren.add(Model.boxFromPlacement(p))
     }))
+     */
 
   }
 

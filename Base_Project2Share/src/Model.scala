@@ -44,10 +44,13 @@ object Model {
     if(isWithinPlacement(model, placement)) {
       val childrenPlacements = childrenNodePlacements(placement)
       val intersections = (childrenPlacements foldRight List[Boolean]()) (intersectsPlacement(model,_) :: _)
-      println(intersections)
       intersections.filter(i => i == true).length >= 2
     } else false
   }
+
+  def listAppropriateModelsForPlacement(list: List[Node], placement: Placement): List[Node] = list.filter(model => isAppropriatePlacement(model, placement))
+
+  def printModels(list: List[Node]): Unit = list.map(m => println(s"${m.getClass}"))
 
   def childrenNodePlacements(placement: Placement): List[Placement] = {
     val subSize = placement._2 / 2
