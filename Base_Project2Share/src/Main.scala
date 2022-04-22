@@ -160,7 +160,7 @@ class Main extends Application {
     b2.setMaterial(redMaterial)
     b2.setDrawMode(DrawMode.LINE)
 
-    val sec1Box = Model.boxFromPlacement(sec1._1)
+    val placement1Box = Model.boxFromPlacement(placement1)
 
     val b3 = new Box(4,4,4)
     //translate because it is added by defaut to the coords (0,0,0)
@@ -174,17 +174,41 @@ class Main extends Application {
     b3Adj.setTranslateX(4 + 2)
     b3Adj.setTranslateY(2)
     b3Adj.setTranslateZ(2)
-    b3Adj.setMaterial(greenMaterial)
+    b3Adj.setMaterial(blueMaterial)
     b3Adj.setDrawMode(DrawMode.LINE)
 
     //adding boxes b2 and b3 to the world
-    worldRoot.getChildren.add(b2)
+    //worldRoot.getChildren.add(b2)
     worldRoot.getChildren.add(b3)
     worldRoot.getChildren.add(b3Adj)
-    worldRoot.getChildren.add(sec1Box)
+    worldRoot.getChildren.add(placement1Box)
 
-    //childrenPlacement working?
-    OctreeOps.childrenNodePlacements((0.0, 0.0, 0.0),32).map((p => {
+    val bigBox = new Box(30, 30, 30)
+    bigBox.setTranslateX(15)
+    bigBox.setTranslateY(15)
+    bigBox.setTranslateZ(15)
+    bigBox.setMaterial(greenMaterial)
+    bigBox.setDrawMode(DrawMode.LINE)
+
+    //Tests and stuff
+    println(s"cylinder1 intersecting sec1 box ? ${Model.intersectsPlacement(cylinder1, sec1._1)}")
+    println(s"cylinder1 intersecting adjacent box? ${Model.intersects(cylinder1, b3Adj)}")
+    println(s"adjacent box intersecting cylinder1? ${Model.intersects(b3Adj, cylinder1)}")
+    println(s"adjacent box within cylinder1? ${Model.isWithin(b3Adj, cylinder1)}")
+    println(s"cylinder1 intersecting first subsection? ${Model.intersectsPlacement(cylinder1, Model.childrenNodePlacements(sec1._1)(0))}")
+    println(s"cylinder1 intersecting last subsection? ${Model.intersectsPlacement(cylinder1, Model.childrenNodePlacements(sec1._1)(7))}")
+    println(s"cylinder1 inside first subsection? ${Model.isWithinPlacement(cylinder1, Model.childrenNodePlacements(sec1._1)(0))}")
+    println(s"last subsection intersecting cylinder1? ${Model.intersects(Model.boxFromPlacement(Model.childrenNodePlacements(sec1._1)(7)), cylinder1)}")
+    println(s"first subsection intersecting cylinder1? ${Model.intersects(Model.boxFromPlacement(Model.childrenNodePlacements(sec1._1)(0)), cylinder1)}")
+    println(s"bigBox inside root? ${Model.isWithin(bigBox, Model.boxFromPlacement((0.0,0.0,0.0),32))}")
+    println(s"bigBox intersecting last root subsection? ${Model.intersects(bigBox, Model.boxFromPlacement(Model.childrenNodePlacements((0.0, 0.0, 0.0), 32)(7)))}")
+
+    worldRoot.getChildren.add(Model.boxFromPlacement(Model.childrenNodePlacements(sec1._1)(0)))
+    worldRoot.getChildren.add(Model.boxFromPlacement(Model.childrenNodePlacements(sec1._1)(7)))
+    worldRoot.getChildren.add(bigBox)
+
+    //childrenPlacement working? YES
+    Model.childrenNodePlacements(((0.0, 0.0, 0.0), 32)).map((p => {
       println((s"${p._1}"))
       worldRoot.getChildren.add(Model.boxFromPlacement(p))
     }))

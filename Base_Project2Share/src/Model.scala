@@ -20,26 +20,47 @@ object Model {
     b
   }
 
-  def isWithinBox(model: Node, box: Box): Boolean = box.getBoundsInParent.contains(model.asInstanceOf[Shape3D].getBoundsInParent)
+  def isWithin(model1: Node, model2: Node): Boolean = model2.getBoundsInParent.contains(model1.asInstanceOf[Shape3D].getBoundsInParent)
 
-  def intersectsBox(model: Node, box: Box): Boolean = model.asInstanceOf[Shape3D].intersects(box.getBoundsInParent)
+  def intersects(model1: Node, model2: Node): Boolean = {
+    //if one is inside the other or vice-versa don't consider as intersecting
+    if (isWithin(model1, model2) || isWithin(model2, model1)) false
+    else if(model1.asInstanceOf[Shape3D].getBoundsInParent.intersects(model2.getBoundsInParent)) true
+    else false
+  }
 
-  def modelsWithinBox(list: List[Node], box: Box): List[Node] = list.filter(m => isWithinBox(m, box))
+  def modelsWithinBox(list: List[Node], box: Box): List[Node] = list.filter(m => isWithin(m, box))
 
   def modelsWithinPlacement(models: List[Node], placement: Placement): List[Node] = modelsWithinBox(models, boxFromPlacement(placement))
 
-  def oneIntersectsPlacement(models: List[Node], placement: Placement): Boolean = (models foldRight true) ((cur, next) => !intersectsBox(cur, boxFromPlacement(placement)) && next)
+  def oneIntersectsPlacement(models: List[Node], placement: Placement): Boolean = (models foldRight true) ((cur, next) => !intersects(cur, boxFromPlacement(placement)) && next)
 
-  def isWithinPlacement(model: Node, placement: Placement): Boolean = isWithinBox(model, boxFromPlacement(placement))
+  def isWithinPlacement(model: Node, placement: Placement): Boolean = isWithin(model, boxFromPlacement(placement))
 
-  def intersectsPlacement(model: Node, placement: Placement): Boolean = intersectsBox(model, boxFromPlacement(placement))
+  def intersectsPlacement(model: Node, placement: Placement): Boolean = intersects(model, boxFromPlacement(placement))
 
   def isAppropriatePlacement(model: Node, placement: Placement): Boolean = {
-    //calculates next subdivision of placement and verifies if it will intersect it
-    //if it does it means it's already in the appropriate node
-    val size = placement._2 / 2
-    val coords = (placement._1._1, placement._1._2, placement._1._3)
-    isWithinPlacement(model, placement) && intersectsPlacement(model, (coords, size))
+    //it's appropriate if it fits in this placement and intersects at least 2 of the subsections
+    if(isWithinPlacement(model, placement)) {
+      val childrenPlacements = childrenNodePlacements(placement)
+      val intersections = (childrenPlacements foldRight List[Boolean]()) (intersectsPlacement(model,_) :: _)
+      println(intersections)
+      intersections.filter(i => i == true).length >= 2
+    } else false
+  }
+
+  def childrenNodePlacements(placement: Placement): List[Placement] = {
+    val subSize = placement._2 / 2
+    List(
+      ((0.0, 0.0, 0.0), subSize),
+      ((0.0, 0.0, subSize), subSize),
+      ((0.0, subSize, 0.0), subSize),
+      ((0.0, subSize, subSize), subSize),
+      ((subSize, 0.0, 0.0), subSize),
+      ((subSize, 0.0, subSize), subSize),
+      ((subSize, subSize, 0.0), subSize),
+      ((subSize, subSize, subSize), subSize),
+    )
   }
 
 }
