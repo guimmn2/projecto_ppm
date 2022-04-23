@@ -12,6 +12,16 @@ import javafx.scene.{PerspectiveCamera, Scene, SceneAntialiasing, SubScene}
 
 class Main extends Application {
 
+
+
+  /* T5
+  def mapColourEffect(func: Color => Color, oct:Octree[Placement]): Octree[Placement] = {
+
+  }
+  */
+
+
+
   //Auxiliary types
   type Point = (Double, Double, Double)
   type Size = Double
@@ -58,6 +68,7 @@ class Main extends Application {
     camVolume.setMaterial(blueMaterial)
     camVolume.setDrawMode(DrawMode.LINE)
 
+    //octree root space representation
     val wiredBox = new Box(32, 32, 32)
     wiredBox.setTranslateX(16)
     wiredBox.setTranslateY(16)
@@ -66,7 +77,7 @@ class Main extends Application {
     wiredBox.setDrawMode(DrawMode.LINE)
 
     val cylinder1 = new Cylinder(0.5, 1, 10)
-    cylinder1.setTranslateX(2)
+    cylinder1.setTranslateX(6)
     cylinder1.setTranslateY(2)
     cylinder1.setTranslateZ(2)
     cylinder1.setScaleX(2)
@@ -80,14 +91,8 @@ class Main extends Application {
     box1.setTranslateZ(5)
     box1.setMaterial(greenMaterial)
 
-    val box2 = new Box(5, 5, 5)  //
-    box2.setTranslateX(0)
-    box2.setTranslateY(0)
-    box2.setTranslateZ(0)
-    box2.setMaterial(redMaterial)
-
     // 3D objects (group of nodes - javafx.scene.Node) that will be provide to the subScene
-    val worldRoot:Group = new Group(wiredBox, camVolume, lineX, lineY, lineZ, cylinder1, box1, box2)
+    val worldRoot:Group = new Group(wiredBox, camVolume, lineX, lineY, lineZ, cylinder1, box1)
 
     //TODO
     FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt").map(x => worldRoot.getChildren.add(x))
@@ -151,11 +156,8 @@ class Main extends Application {
 
     val placement1: Placement = ((0, 0, 0), 8.0)
     val sec1: Section = (((0.0,0.0,0.0), 4.0), List(cylinder1.asInstanceOf[Node]))
-    val sec2: Section = (((0.0,0.0,0.0), 800.0), List(box2.asInstanceOf[Node]))
     val ocLeaf1 = OcLeaf(sec1)
-    val ocLeaf2 = OcLeaf(sec2)
-    val oct1:Octree[Placement] = OcNode[Placement](placement1, ocLeaf1, ocLeaf2, OcEmpty, OcEmpty, OcEmpty, OcEmpty, OcEmpty, OcEmpty)
-    val oct2:Octree[Placement] = oct1
+    val oct1: Octree[Placement] = OcNode[Placement](placement1, ocLeaf1, OcEmpty, OcEmpty, OcEmpty, OcEmpty, OcEmpty, OcEmpty, OcEmpty)
 
     //example of bounding boxes (corresponding to the octree oct1) added manually to the world
     val b2 = new Box(8,8,8)
@@ -174,11 +176,14 @@ class Main extends Application {
     b3.setMaterial(redMaterial)
     b3.setDrawMode(DrawMode.LINE)
 
+    OctreeOps.scaleOctree(1,oct1)
     //adding boxes b2 and b3 to the world
     worldRoot.getChildren.add(b2)
     worldRoot.getChildren.add(b3)
 
   }
+
+
 
   override def init(): Unit = {
     println("init")
