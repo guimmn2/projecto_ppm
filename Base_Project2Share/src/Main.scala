@@ -12,6 +12,16 @@ import javafx.scene.{PerspectiveCamera, Scene, SceneAntialiasing, SubScene}
 
 class Main extends Application {
 
+
+
+  /* T5
+  def mapColourEffect(func: Color => Color, oct:Octree[Placement]): Octree[Placement] = {
+
+  }
+  */
+
+
+
   //Auxiliary types
   type Point = (Double, Double, Double)
   type Size = Double
@@ -58,6 +68,7 @@ class Main extends Application {
     camVolume.setMaterial(blueMaterial)
     camVolume.setDrawMode(DrawMode.LINE)
 
+    //octree root space representation
     val wiredBox = new Box(32, 32, 32)
     wiredBox.setTranslateX(16)
     wiredBox.setTranslateY(16)
@@ -66,7 +77,7 @@ class Main extends Application {
     wiredBox.setDrawMode(DrawMode.LINE)
 
     val cylinder1 = new Cylinder(0.5, 1, 10)
-    cylinder1.setTranslateX(2)
+    cylinder1.setTranslateX(6)
     cylinder1.setTranslateY(2)
     cylinder1.setTranslateZ(2)
     cylinder1.setScaleX(2)
@@ -81,10 +92,10 @@ class Main extends Application {
     box1.setMaterial(greenMaterial)
 
     // 3D objects (group of nodes - javafx.scene.Node) that will be provide to the subScene
-    val worldRoot:Group = new Group(wiredBox, camVolume, lineX, lineY, lineZ)
+    val worldRoot:Group = new Group(wiredBox, camVolume, lineX, lineY, lineZ, cylinder1, box1)
 
     //loads objects into world
-    //FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt").map(x => worldRoot.getChildren.add(x))
+    /*FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt").map(x => worldRoot.getChildren.add(x))*/
 
     // Camera
     val camera = new PerspectiveCamera(true)
@@ -189,6 +200,7 @@ class Main extends Application {
 
     //SpaceOps.subSections((32.0, 0.0, 0.0), 32).foreach(m => worldRoot.getChildren.add(m))
 
+    OctreeOps.scaleOctree(1,oct1)
     //adding boxes b2 and b3 to the world
     //worldRoot.getChildren.add(b2)
     //worldRoot.getChildren.add(b3)
@@ -203,6 +215,8 @@ class Main extends Application {
     ocTreeBoxes.foreach(b => worldRoot.getChildren.add(b))
 
   }
+
+
 
   override def init(): Unit = {
     println("init")
