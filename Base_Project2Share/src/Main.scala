@@ -209,10 +209,11 @@ class Main extends Application {
     //worldRoot.getChildren.add(adjB3)
 
     val models = FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt")
-    models.foreach(m => worldRoot.getChildren.add(m))
+    models.map(m => worldRoot.getChildren.add(m))
     val octree = OctreeOps.generateOcTree(((0.0, 0.0, 0.0), 32), models, 6)
     val ocTreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
-    ocTreeBoxes.foreach(b => worldRoot.getChildren.add(b))
+    OctreeOps.scaleOctree(5.0, octree)
+    ocTreeBoxes.map(b => worldRoot.getChildren.add(b))
 
   }
 
