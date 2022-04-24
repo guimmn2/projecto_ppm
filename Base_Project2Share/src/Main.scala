@@ -41,7 +41,8 @@ class Main extends Application {
     val blueMaterial = new PhongMaterial()
     blueMaterial.setDiffuseColor(Color.rgb(0,0,150))
 
-
+    val whiteMaterial = new PhongMaterial()
+    whiteMaterial.setDiffuseColor(Color.rgb(255,255,255))
 
     //3D objects
     val lineX = new Line(0, 0, 200, 0)
@@ -141,11 +142,10 @@ class Main extends Application {
     def changeColor(): Unit = {
       worldRoot.getChildren.forEach(n=> {
         if(n.isInstanceOf[Shape3D] && !n.asInstanceOf[Shape3D].getBoundsInParent.intersects(camVolume.getBoundsInParent)) {
-          n.asInstanceOf[Shape3D].setMaterial(blueMaterial)
+          n.asInstanceOf[Shape3D].setMaterial(whiteMaterial)
         }
       })
     }
-
 
     //Mouse left click interaction
     scene.setOnMouseClicked((event) => {
@@ -153,9 +153,6 @@ class Main extends Application {
       worldRoot.getChildren.removeAll()
       changeColor()
     })
-
-    val whiteMaterial = new PhongMaterial()
-    whiteMaterial.setDiffuseColor(Color.rgb(255,255,255))
 
     //setup and start the Stage
     stage.setTitle("PPM Project 21/22")
