@@ -212,6 +212,7 @@ class Main extends Application {
     models.foreach(m => worldRoot.getChildren.add(m))
     val octree = OctreeOps.generateOcTree(((0.0, 0.0, 0.0), 32), models, 6)
     val ocTreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
+    OctreeOps.scaleOctree(2.0, octree)
     ocTreeBoxes.foreach(b => worldRoot.getChildren.add(b))
 
   }

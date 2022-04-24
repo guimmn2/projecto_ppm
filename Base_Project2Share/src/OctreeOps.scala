@@ -33,9 +33,9 @@ object OctreeOps {
       lst match {
         case List() => List()
         case x :: xs =>
-          x.setScaleX(fact)
-          x.setScaleY(fact)
-          x.setScaleZ(fact)
+          x.setScaleX(x.getScaleX * fact)
+          x.setScaleY(x.getScaleY * fact)
+          x.setScaleZ(x.getScaleZ * fact)
           x :: scale3DModels(fact, xs)
       }
     }
