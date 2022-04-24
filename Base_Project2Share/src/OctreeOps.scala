@@ -1,9 +1,7 @@
 import Types._
 import javafx.scene.Node
 
-case class OctreeOps(octree: Octree[Placement]) {
-  def scale(factor: Double): Octree[Placement] = OctreeOps.scaleOctree(factor, octree)
-}
+case class OctreeOps(octree: Octree[Placement])
 
 object OctreeOps {
 
