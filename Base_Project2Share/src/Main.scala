@@ -95,7 +95,7 @@ class Main extends Application {
     val worldRoot:Group = new Group(wiredBox, camVolume, lineX, lineY, lineZ, cylinder1, box1)
 
     //loads objects into world
-    FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt").map(x => worldRoot.getChildren.add(x))
+    /*FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt").map(x => worldRoot.getChildren.add(x))*/
 
     // Camera
     val camera = new PerspectiveCamera(true)
