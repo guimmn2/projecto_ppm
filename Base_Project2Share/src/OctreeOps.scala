@@ -10,8 +10,8 @@ object OctreeOps {
       val appropriateModels = ModelOps.filterAppropriateModelsForPlacement(list, root)
       appropriateModels match {
         case x :: y => {
-          ModelOps.printModels(x :: y);
-          OcLeaf(root, x :: y)
+          ModelOps.printModels(x :: y ++ ModelOps.filterModelsWithin(list, ModelOps.createBox(root)));
+          OcLeaf(root, x :: y ++ ModelOps.filterModelsWithin(list, ModelOps.createBox(root)))
         }
         case List() => OcNode[Placement](
           root,
@@ -33,10 +33,9 @@ object OctreeOps {
       lst match {
         case List() => List()
         case x :: xs =>
-          x.setScaleX(fact)
-          x.setScaleY(fact)
-          x.setScaleZ(fact)
-          x :: scale3DModels(fact, xs)
+         val newModel = ModelOps.createModelFromNode(x)
+          newModel.setScaleX(x.getScaleX * fact)
+         scale3DModels(fact, xs)
       }
     }
 
