@@ -1,9 +1,9 @@
 import Types._
 import javafx.scene.Node
 import javafx.scene.paint.{Color, PhongMaterial}
-import javafx.scene.shape.{Box, DrawMode, Shape3D}
+import javafx.scene.shape.{Box, Cylinder, DrawMode, Shape3D}
 
-object SpaceOps {
+object ModelOps {
 
   val purpleMaterial = new PhongMaterial()
   purpleMaterial.setDiffuseColor(Color.rgb(150, 0, 150))
@@ -82,6 +82,40 @@ object SpaceOps {
           generateBoundingBoxes(f, list) ++
           generateBoundingBoxes(g, list) ++
           generateBoundingBoxes(h, list)
+    }
+  }
+
+  def createModelFromNode(node: Node): Node = {
+    if(node.isInstanceOf[Cylinder]) {
+      val data = node.asInstanceOf[Cylinder]
+      val coords = (data.getTranslateX, data.getTranslateY, data.getTranslateZ)
+      val scale = (data.getScaleX, data.getScaleY, data.getScaleZ)
+      val dimensions = (data.getRadius, data.getHeight, data.getDivisions)
+      val material = data.getMaterial
+      val cylinder = new Cylinder(dimensions._1, dimensions._2, dimensions._3)
+      cylinder.setTranslateX(coords._1)
+      cylinder.setTranslateY(coords._1)
+      cylinder.setTranslateZ(coords._1)
+      cylinder.setScaleX(scale._1)
+      cylinder.setScaleY(scale._2)
+      cylinder.setScaleZ(scale._3)
+      cylinder.setMaterial(material)
+      cylinder
+    } else {
+      val data = node.asInstanceOf[Box]
+      val coords = (data.getTranslateX, data.getTranslateY, data.getTranslateZ)
+      val scale = (data.getScaleX, data.getScaleY, data.getScaleZ)
+      val dimensions = (data.getHeight, data.getWidth, data.getDepth)
+      val material = data.getMaterial
+      val box = new Box(dimensions._1, dimensions._2, dimensions._3)
+      box.setTranslateX(coords._1)
+      box.setTranslateY(coords._1)
+      box.setTranslateZ(coords._1)
+      box.setScaleX(scale._1)
+      box.setScaleY(scale._2)
+      box.setScaleZ(scale._3)
+      box.setMaterial(material)
+      box
     }
   }
 

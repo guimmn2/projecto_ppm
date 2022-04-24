@@ -184,18 +184,18 @@ class Main extends Application {
     adjB3.setMaterial(greenMaterial)
     adjB3.setDrawMode(DrawMode.LINE)
 
-    val cylinderBox = SpaceOps.createBox((0.0, 0.0, 0.0), 4)
-    val intersectingBox = SpaceOps.createBox((2.0, 0.0, 0.0),4)
+    val cylinderBox = ModelOps.createBox((0.0, 0.0, 0.0), 4)
+    val intersectingBox = ModelOps.createBox((2.0, 0.0, 0.0),4)
 
-    println(s"is cylinder within cylinder box ? ${SpaceOps.isWithin(cylinder1, cylinderBox)}")
-    println(s"is cylinder intersecting cylinder box? ${SpaceOps.intersects(cylinder1, cylinderBox)}")
-    println(s"is cylinder intersecting intersecBox? ${SpaceOps.intersects(cylinder1, intersectingBox)}")
-    println(s"are any models within cylinder box? ${SpaceOps.areModelsWithin(List(cylinder1), cylinderBox)}")
-    println(s"is adjB3 within cylinderBox? ${SpaceOps.isWithin(adjB3, cylinderBox)}")
+    println(s"is cylinder within cylinder box ? ${ModelOps.isWithin(cylinder1, cylinderBox)}")
+    println(s"is cylinder intersecting cylinder box? ${ModelOps.intersects(cylinder1, cylinderBox)}")
+    println(s"is cylinder intersecting intersecBox? ${ModelOps.intersects(cylinder1, intersectingBox)}")
+    println(s"are any models within cylinder box? ${ModelOps.areModelsWithin(List(cylinder1), cylinderBox)}")
+    println(s"is adjB3 within cylinderBox? ${ModelOps.isWithin(adjB3, cylinderBox)}")
     print("models within cylinderBox: ")
-    SpaceOps.printModels(SpaceOps.filterModelsWithin(List(cylinder1),cylinderBox))
+    ModelOps.printModels(ModelOps.filterModelsWithin(List(cylinder1),cylinderBox))
     print("models appropriate for cylinderBox: ")
-    SpaceOps.printModels(SpaceOps.filterAppropriateModelsForPlacement(List(cylinder1, cylinderBox, adjB3, cylinder1), ((0.0, 0.0, 0.0), 4)))
+    ModelOps.printModels(ModelOps.filterAppropriateModelsForPlacement(List(cylinder1, cylinderBox, adjB3, cylinder1), ((0.0, 0.0, 0.0), 4)))
 
 
     //SpaceOps.subSections((32.0, 0.0, 0.0), 32).foreach(m => worldRoot.getChildren.add(m))
@@ -209,10 +209,11 @@ class Main extends Application {
     //worldRoot.getChildren.add(adjB3)
 
     val models = FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt")
-    models.foreach(m => worldRoot.getChildren.add(m))
+    models.map(m => worldRoot.getChildren.add(m))
     val octree = OctreeOps.generateOcTree(((0.0, 0.0, 0.0), 32), models, 6)
-    val ocTreeBoxes = SpaceOps.generateBoundingBoxes(octree, List())
-    ocTreeBoxes.foreach(b => worldRoot.getChildren.add(b))
+    val ocTreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
+    OctreeOps.scaleOctree(5.0, octree)
+    ocTreeBoxes.map(b => worldRoot.getChildren.add(b))
 
   }
 
