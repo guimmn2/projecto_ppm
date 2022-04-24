@@ -1,5 +1,6 @@
 import Types._
 import javafx.scene.Node
+import javafx.scene.paint.Color
 
 object OctreeOps {
 
@@ -46,6 +47,12 @@ object OctreeOps {
         OcNode(((x, y, z), size * fact), scaleOctree(fact, oc1), scaleOctree(fact, oc2),
           scaleOctree(fact, oc3), scaleOctree(fact, oc4), scaleOctree(fact, oc5), scaleOctree(fact, oc6),
           scaleOctree(fact, oc7), scaleOctree(fact, oc8))
+    }
+  }
+
+  def mapColourEffect(octree: Octree[Placement], f: Color => Color): Octree[Placement] = {
+    octree match {
+      case OcLeaf(section) => OcLeaf()
     }
   }
 
