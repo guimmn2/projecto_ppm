@@ -1,7 +1,9 @@
 import Types._
 import javafx.scene.Node
 
-case class OctreeOps(octree: Octree[Placement])
+case class OctreeOps(octree: Octree[Placement]) {
+  def scale(factor: Double): Octree[Placement] = OctreeOps.scaleOctree(factor, octree)
+}
 
 object OctreeOps {
 
@@ -30,13 +32,6 @@ object OctreeOps {
     }
   }
 
-  def main(args: Array[String]): Unit = {
-    val models = FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt")
-    val root = ((0.0, 0.0, 0.0), 32.0)
-    val maxDepth = 6
-    generateOcTree(root, models, maxDepth)
-  }
-
   def scaleOctree(fact: Double, oct: Octree[Placement]): Octree[Placement] = {
     def scale3DModels(fact: Double, lst: List[Node]): List[Node] = {
       lst match {
@@ -57,6 +52,13 @@ object OctreeOps {
           scaleOctree(fact, oc3), scaleOctree(fact, oc4), scaleOctree(fact, oc5), scaleOctree(fact, oc6),
           scaleOctree(fact, oc7), scaleOctree(fact, oc8))
     }
+  }
+
+  def main(args: Array[String]): Unit = {
+    val models = FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt")
+    val root = ((0.0, 0.0, 0.0), 32.0)
+    val maxDepth = 6
+    generateOcTree(root, models, maxDepth)
   }
 
 }
