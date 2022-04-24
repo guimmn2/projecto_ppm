@@ -9,24 +9,24 @@ object OctreeOps {
 
   def generateOcTree(root: Placement, list: List[Node], maxDepth: Int): Octree[Placement] = {
     println(s"root: ${root}")
-    if (maxDepth == 0 || !SpaceOps.areModelsWithin(list, SpaceOps.createBox(root))) OcEmpty
+    if (maxDepth == 0 || !ModelOps.areModelsWithin(list, ModelOps.createBox(root))) OcEmpty
     else {
-      val appropriateModels = SpaceOps.filterAppropriateModelsForPlacement(list, root)
+      val appropriateModels = ModelOps.filterAppropriateModelsForPlacement(list, root)
       appropriateModels match {
         case x :: y => {
-          SpaceOps.printModels(x :: y);
+          ModelOps.printModels(x :: y);
           OcLeaf(root, x :: y)
         }
         case List() => OcNode[Placement](
           root,
-          generateOcTree(SpaceOps.subPlacements(root)(0), list, maxDepth - 1),
-          generateOcTree(SpaceOps.subPlacements(root)(1), list, maxDepth - 1),
-          generateOcTree(SpaceOps.subPlacements(root)(2), list, maxDepth - 1),
-          generateOcTree(SpaceOps.subPlacements(root)(3), list, maxDepth - 1),
-          generateOcTree(SpaceOps.subPlacements(root)(4), list, maxDepth - 1),
-          generateOcTree(SpaceOps.subPlacements(root)(5), list, maxDepth - 1),
-          generateOcTree(SpaceOps.subPlacements(root)(6), list, maxDepth - 1),
-          generateOcTree(SpaceOps.subPlacements(root)(7), list, maxDepth - 1)
+          generateOcTree(ModelOps.subPlacements(root)(0), list, maxDepth - 1),
+          generateOcTree(ModelOps.subPlacements(root)(1), list, maxDepth - 1),
+          generateOcTree(ModelOps.subPlacements(root)(2), list, maxDepth - 1),
+          generateOcTree(ModelOps.subPlacements(root)(3), list, maxDepth - 1),
+          generateOcTree(ModelOps.subPlacements(root)(4), list, maxDepth - 1),
+          generateOcTree(ModelOps.subPlacements(root)(5), list, maxDepth - 1),
+          generateOcTree(ModelOps.subPlacements(root)(6), list, maxDepth - 1),
+          generateOcTree(ModelOps.subPlacements(root)(7), list, maxDepth - 1)
         )
       }
     }
