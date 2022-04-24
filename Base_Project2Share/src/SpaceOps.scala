@@ -46,7 +46,9 @@ object SpaceOps {
 
   def subPlacements(placement: Placement): List[Placement] = {
     val subSize = placement._2 / 2
-    val x = placement._1._1; val y = placement._1._2; val z = placement._1._3;
+    val x = placement._1._1;
+    val y = placement._1._2;
+    val z = placement._1._3;
     List(
       ((x, y, z), subSize),
       ((x + subSize, y, z), subSize),
@@ -66,6 +68,22 @@ object SpaceOps {
 
   def filterAppropriateModelsForPlacement(list: List[Node], placement: Placement): List[Node] = list.filter(m => isModelInAppropriatePlacement(m, placement) == true)
 
+  def generateBoundingBoxes(octree: Octree[Placement], list: List[Box]): List[Box] = {
+    octree match {
+      case OcEmpty => Nil
+      case OcLeaf((plc: Placement, _)) => createBox(plc) :: list
+      case OcNode(root, a, b, c, d, e, f, g, h) =>
+        createBox(root) ::
+          generateBoundingBoxes(a, list) ++
+          generateBoundingBoxes(b, list) ++
+          generateBoundingBoxes(c, list) ++
+          generateBoundingBoxes(d, list) ++
+          generateBoundingBoxes(e, list) ++
+          generateBoundingBoxes(f, list) ++
+          generateBoundingBoxes(g, list) ++
+          generateBoundingBoxes(h, list)
+    }
+  }
 
   def printModels(list: List[Node]): Unit = list.foreach(m => println(m))
 }

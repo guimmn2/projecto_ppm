@@ -66,7 +66,7 @@ class Main extends Application {
     wiredBox.setDrawMode(DrawMode.LINE)
 
     val cylinder1 = new Cylinder(0.5, 1, 10)
-    cylinder1.setTranslateX(6)
+    cylinder1.setTranslateX(2)
     cylinder1.setTranslateY(2)
     cylinder1.setTranslateZ(2)
     cylinder1.setScaleX(2)
@@ -81,7 +81,7 @@ class Main extends Application {
     box1.setMaterial(greenMaterial)
 
     // 3D objects (group of nodes - javafx.scene.Node) that will be provide to the subScene
-    val worldRoot:Group = new Group(wiredBox, camVolume, lineX, lineY, lineZ, cylinder1, box1)
+    val worldRoot:Group = new Group(wiredBox, camVolume, lineX, lineY, lineZ)
 
     //loads objects into world
     //FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt").map(x => worldRoot.getChildren.add(x))
@@ -187,14 +187,20 @@ class Main extends Application {
     SpaceOps.printModels(SpaceOps.filterAppropriateModelsForPlacement(List(cylinder1, cylinderBox, adjB3, cylinder1), ((0.0, 0.0, 0.0), 4)))
 
 
-    SpaceOps.subSections((0.0, 0.0, 8.0), 8).foreach(m => worldRoot.getChildren.add(m))
+    //SpaceOps.subSections((32.0, 0.0, 0.0), 32).foreach(m => worldRoot.getChildren.add(m))
 
     //adding boxes b2 and b3 to the world
-    worldRoot.getChildren.add(b2)
+    //worldRoot.getChildren.add(b2)
     //worldRoot.getChildren.add(b3)
-    worldRoot.getChildren.add(cylinderBox)
-    worldRoot.getChildren.add(intersectingBox)
-    worldRoot.getChildren.add(adjB3)
+    //worldRoot.getChildren.add(cylinderBox)
+    //worldRoot.getChildren.add(intersectingBox)
+    //worldRoot.getChildren.add(adjB3)
+
+    val models = FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt")
+    models.foreach(m => worldRoot.getChildren.add(m))
+    val octree = OctreeOps.generateOcTree(((0.0, 0.0, 0.0), 32), models, 6)
+    val ocTreeBoxes = SpaceOps.generateBoundingBoxes(octree, List())
+    ocTreeBoxes.foreach(b => worldRoot.getChildren.add(b))
 
   }
 

@@ -32,15 +32,9 @@ object OctreeOps {
   }
 
   def main(args: Array[String]): Unit = {
-
-    val cylinder1 = new Cylinder(0.5, 1, 10)
-    cylinder1.setTranslateX(2)
-    cylinder1.setTranslateY(2)
-    cylinder1.setTranslateZ(2)
-    cylinder1.setScaleX(2)
-    cylinder1.setScaleY(2)
-    cylinder1.setScaleZ(2)
-
-    generateOcTree(((0.0, 0.0, 0.0), 32), List(cylinder1), 6)
+    val models = FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt")
+    val root = ((0.0, 0.0, 0.0), 32.0)
+    val maxDepth = 6
+    generateOcTree(root, models, maxDepth)
   }
 }
