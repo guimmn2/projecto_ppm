@@ -151,7 +151,7 @@ class Main extends Application {
     scene.setOnMouseClicked((event) => {
       camVolume.setTranslateX(camVolume.getTranslateX + 2)
       worldRoot.getChildren.removeAll()
-
+      changeColor()
     })
 
     val whiteMaterial = new PhongMaterial()
