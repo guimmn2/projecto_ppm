@@ -3,7 +3,7 @@ import javafx.scene.Node
 import javafx.scene.paint.{Color, PhongMaterial}
 import javafx.scene.shape.{Box, DrawMode, Shape3D}
 
-object SpaceOps {
+object ModelOps {
 
   val purpleMaterial = new PhongMaterial()
   purpleMaterial.setDiffuseColor(Color.rgb(150, 0, 150))
