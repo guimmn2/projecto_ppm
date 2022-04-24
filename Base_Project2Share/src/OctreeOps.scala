@@ -1,8 +1,6 @@
 import Types._
 import javafx.scene.Node
 
-case class OctreeOps(octree: Octree[Placement])
-
 object OctreeOps {
 
   def generateOcTree(root: Placement, list: List[Node], maxDepth: Int): Octree[Placement] = {
