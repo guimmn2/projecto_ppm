@@ -50,11 +50,8 @@ object OctreeOps {
     }
   }
 
-  def mapColourEffect(octree: Octree[Placement], f: Color => Color): Octree[Placement] = {
-    octree match {
-      case OcLeaf(section) => OcLeaf()
-    }
-  }
+  //TODO
+  //def mapColourEffect(octree: Octree[Placement], f: Color => Color): Octree[Placement]
 
   def main(args: Array[String]): Unit = {
     val models = FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt")
