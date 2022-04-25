@@ -214,7 +214,8 @@ class Main extends Application {
     val ocTreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
     OctreeOps.scaleOctree(5.0, octree)
     ocTreeBoxes.map(b => worldRoot.getChildren.add(b))
-
+    print("to display")
+    print(ModelOps.toDisplayAll(ModelOps.toDisplayModels(octree,List()),ocTreeBoxes))
   }
 
 

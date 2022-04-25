@@ -1,5 +1,7 @@
 import Types._
-import javafx.scene.Node
+import javafx.scene._
+import javafx.scene.shape.Box
+
 
 object OctreeOps {
 
@@ -48,6 +50,8 @@ object OctreeOps {
           scaleOctree(fact, oc7), scaleOctree(fact, oc8))
     }
   }
+
+
 
   def main(args: Array[String]): Unit = {
     val models = FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt")
