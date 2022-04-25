@@ -34,9 +34,9 @@ object OctreeOps {
       lst match {
         case List() => List()
         case x :: xs =>
-         val newModel = ModelOps.createModelFromNode(x)
+          val newModel = ModelOps.createModelFromNode(x)
           newModel.setScaleX(x.getScaleX * fact)
-         scale3DModels(fact, xs)
+          scale3DModels(fact, xs)
       }
     }
 
@@ -50,14 +50,39 @@ object OctreeOps {
     }
   }
 
-  //TODO
-  //def mapColourEffect(octree: Octree[Placement], f: Color => Color): Octree[Placement]
+  def mapColourEffect(func: Color => Color)(octree: Octree[Placement]): Octree[Placement] = {
+    octree match {
+      case OcLeaf(section: Section) => {
+        //creates new list of models from existing models in leaf and applies colour effect
+        val alteredModels = (section._2 foldRight List[Node]()) ((cur, next) => ModelOps.applyColourEffect(func)(ModelOps.createModelFromNode(cur)) :: next)
+        println("mapColourEffect")
+        ModelOps.printModels(alteredModels)
+        OcLeaf(section._1, alteredModels)
+      }
+      case OcEmpty => OcEmpty
+      case OcNode(root, a, b, c, d, e, f, g, h) => OcNode[Placement](
+        root,
+        mapColourEffect(func)(a),
+        mapColourEffect(func)(b),
+        mapColourEffect(func)(c),
+        mapColourEffect(func)(d),
+        mapColourEffect(func)(e),
+        mapColourEffect(func)(f),
+        mapColourEffect(func)(g),
+        mapColourEffect(func)(h),
+      )
+    }
+  }
+
+  //curried greenRemove for octree
+  val greenRemove = mapColourEffect(ModelOps.greenRemove)(_)
 
   def main(args: Array[String]): Unit = {
     val models = FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt")
     val root = ((0.0, 0.0, 0.0), 32.0)
     val maxDepth = 6
-    generateOcTree(root, models, maxDepth)
+    val octree = generateOcTree(root, models, maxDepth)
+    val colouredOctree = mapColourEffect(ModelOps.greenRemove)(octree)
   }
 
 }

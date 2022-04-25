@@ -85,6 +85,7 @@ object ModelOps {
     }
   }
 
+  //function that returns a coloured node according to f
   def applyColourEffect(f: Color => Color)(model: Node): Node = {
     val newModel = createModelFromNode(model).asInstanceOf[Shape3D]
     val color: Color = newModel.getMaterial.asInstanceOf[PhongMaterial].getDiffuseColor
@@ -94,8 +95,9 @@ object ModelOps {
     newModel
   }
 
-  val greenRemove = applyColourEffect(c => Color.rgb((c.getRed * 255).toInt, 0, (c.getBlue * 255).toInt))(_)
-  val addRed = applyColourEffect(c =>  Color.rgb(255, (c.getGreen * 255).toInt, (c.getBlue * 255).toInt))(_)
+  //color funcs
+  val curryGreenRemove = applyColourEffect(greenRemove)(_)
+  def greenRemove(c: Color): Color = Color.rgb((c.getRed * 255).toInt, 0, (c.getBlue * 255).toInt)
 
   //we did this because we were having trouble with pointers. Wasn't creating a new value equal to the Nodes we wanted ...
   def createModelFromNode(node: Node): Node = {
@@ -132,5 +134,5 @@ object ModelOps {
     }
   }
 
-  def printModels(list: List[Node]): Unit = list.foreach(m => println(m))
+  def printModels(list: List[Node]): Unit = list.foreach(m => println(s"class: ${m.getClass}, colors: { green: ${m.asInstanceOf[Shape3D].getMaterial.asInstanceOf[PhongMaterial].getDiffuseColor.getGreen * 255}"))
 }
