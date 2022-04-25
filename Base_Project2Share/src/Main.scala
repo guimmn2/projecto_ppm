@@ -92,7 +92,7 @@ class Main extends Application {
     box1.setMaterial(greenMaterial)
 
     // 3D objects (group of nodes - javafx.scene.Node) that will be provide to the subScene
-    val worldRoot:Group = new Group(wiredBox, camVolume, lineX, lineY, lineZ, cylinder1, box1)
+    val worldRoot:Group = new Group(wiredBox, camVolume, lineX, lineY, lineZ) /*, cylinder1, box1) */
 
     //loads objects into world
     /*FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt").map(x => worldRoot.getChildren.add(x))*/
@@ -139,11 +139,8 @@ class Main extends Application {
 
     val scene = new Scene(root, 810, 610, true, SceneAntialiasing.BALANCED)
 
-    //Mouse left click interaction
-    scene.setOnMouseClicked((event) => {
-      camVolume.setTranslateX(camVolume.getTranslateX + 2)
-      worldRoot.getChildren.removeAll()
-    })
+
+
 
     //setup and start the Stage
     stage.setTitle("PPM Project 21/22")
@@ -214,9 +211,28 @@ class Main extends Application {
     val ocTreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
     OctreeOps.scaleOctree(5.0, octree)
     ocTreeBoxes.map(b => worldRoot.getChildren.add(b))
-    print("to display")
-    print(ModelOps.toDisplayAll(ModelOps.toDisplayModels(octree,List()),ocTreeBoxes))
+    println("to display:")
+    print(ModelOps.toDisplayAll(octree))
+
+    def changeColor(): Unit = {
+      ModelOps.toDisplayModels(octree,List()).map(n=> {
+        if(n.isInstanceOf[Shape3D] && !n.asInstanceOf[Shape3D].getBoundsInParent.intersects(camVolume.getBoundsInParent)) {
+          n.asInstanceOf[Shape3D].setMaterial(blueMaterial)
+        }else {
+          n.asInstanceOf[Shape3D].setMaterial(greenMaterial) /*green material foi so para testar*/
+        }
+      })
+    }
+
+    //Mouse left click interaction
+    scene.setOnMouseClicked((event) => {
+      camVolume.setTranslateX(camVolume.getTranslateX + 2)
+      worldRoot.getChildren.removeAll()
+      changeColor()
+    })
   }
+
+
 
 
 

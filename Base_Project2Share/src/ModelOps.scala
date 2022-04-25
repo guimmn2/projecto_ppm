@@ -135,8 +135,8 @@ object ModelOps {
     }
   }
 
-  def toDisplayAll(lstModels:List[Node],lstBoxes:List[Node]):List[Node] = {
-    lstModels++lstBoxes
+  def toDisplayAll(oct:Octree[Placement]):List[Node] = {
+    toDisplayModels(oct,List()) ++ generateBoundingBoxes(oct,List())
   }
 
   def printModels(list: List[Node]): Unit = list.foreach(m => println(m))
