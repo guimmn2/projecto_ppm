@@ -134,5 +134,8 @@ object ModelOps {
     }
   }
 
-  def printModels(list: List[Node]): Unit = list.foreach(m => println(s"class: ${m.getClass}, colors: { green: ${m.asInstanceOf[Shape3D].getMaterial.asInstanceOf[PhongMaterial].getDiffuseColor.getGreen * 255}"))
+  private def getColor(node: Node): Color = node.asInstanceOf[Shape3D].getMaterial.asInstanceOf[PhongMaterial].getDiffuseColor
+
+  def printModels(list: List[Node]): Unit = list.foreach(m => println(s"class: ${m.getClass}" +
+    s" color: { red: ${getColor(m).getRed * 255}, green: ${getColor(m).getGreen * 255},  blue: ${getColor(m).getBlue * 255} }"))
 }
