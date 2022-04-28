@@ -84,5 +84,4 @@ object OctreeOps {
     val octree = generateOcTree(root, models, maxDepth)
     val colouredOctree = mapColourEffect(ModelOps.greenRemove)(octree)
   }
-
 }

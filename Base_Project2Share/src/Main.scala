@@ -12,16 +12,6 @@ import javafx.scene.{PerspectiveCamera, Scene, SceneAntialiasing, SubScene}
 
 class Main extends Application {
 
-
-
-  /* T5
-  def mapColourEffect(func: Color => Color, oct:Octree[Placement]): Octree[Placement] = {
-
-  }
-  */
-
-
-
   //Auxiliary types
   type Point = (Double, Double, Double)
   type Size = Double
@@ -50,6 +40,9 @@ class Main extends Application {
 
     val blueMaterial = new PhongMaterial()
     blueMaterial.setDiffuseColor(Color.rgb(0,0,150))
+
+    val whiteMaterial = new PhongMaterial()
+    whiteMaterial.setDiffuseColor(Color.rgb(255,255,255))
 
     //3D objects
     val lineX = new Line(0, 0, 200, 0)
@@ -140,10 +133,21 @@ class Main extends Application {
 
     val scene = new Scene(root, 810, 610, true, SceneAntialiasing.BALANCED)
 
+
+    //T3 Altera a cor
+    def changeColor(): Unit = {
+      worldRoot.getChildren.forEach(n=> {
+        if(n.isInstanceOf[Shape3D] && !n.asInstanceOf[Shape3D].getBoundsInParent.intersects(camVolume.getBoundsInParent)) {
+          n.asInstanceOf[Shape3D].setMaterial(whiteMaterial)
+        }
+      })
+    }
+
     //Mouse left click interaction
     scene.setOnMouseClicked((event) => {
       camVolume.setTranslateX(camVolume.getTranslateX + 2)
       worldRoot.getChildren.removeAll()
+      changeColor()
     })
 
     //setup and start the Stage
@@ -219,9 +223,6 @@ class Main extends Application {
      */
 
   }
-
-
-
   override def init(): Unit = {
     println("init")
   }
