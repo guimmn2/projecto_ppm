@@ -136,7 +136,27 @@ object ModelOps {
     }
   }
 
-
   def printModels(list: List[Node]): Unit = list.foreach(m => println(s"class: ${m.getClass}" +
     s" color: { red: ${getColor(m).getRed * 255}, green: ${getColor(m).getGreen * 255},  blue: ${getColor(m).getBlue * 255} }"))
+
+  def toDisplayModels(oct:Octree[Placement],lst:List[Node]):List[Node] = {
+    oct match {
+      case OcEmpty => List()
+      case OcLeaf(section:Section) => section._2 ++ lst
+      case OcNode(((x, y, z), size), oc1, oc2, oc3, oc4, oc5, oc6, oc7, oc8) =>
+        toDisplayModels(oc1,lst) ++
+          toDisplayModels(oc2,lst) ++
+          toDisplayModels(oc3,lst) ++
+          toDisplayModels(oc4,lst) ++
+          toDisplayModels(oc5,lst) ++
+          toDisplayModels(oc6,lst) ++
+          toDisplayModels(oc7,lst) ++
+          toDisplayModels(oc8,lst)
+    }
+  }
+
+  def toDisplayAll(oct:Octree[Placement]):List[Node] = {
+    toDisplayModels(oct,List()) ++ generateBoundingBoxes(oct,List())
+  }
+
 }

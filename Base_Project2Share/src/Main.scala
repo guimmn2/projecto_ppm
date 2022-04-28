@@ -134,22 +134,6 @@ class Main extends Application {
     val scene = new Scene(root, 810, 610, true, SceneAntialiasing.BALANCED)
 
 
-    //T3 Altera a cor
-    def changeColor(): Unit = {
-      worldRoot.getChildren.forEach(n=> {
-        if(n.isInstanceOf[Shape3D] && !n.asInstanceOf[Shape3D].getBoundsInParent.intersects(camVolume.getBoundsInParent)) {
-          n.asInstanceOf[Shape3D].setMaterial(whiteMaterial)
-        }
-      })
-    }
-
-    //Mouse left click interaction
-    scene.setOnMouseClicked((event) => {
-      camVolume.setTranslateX(camVolume.getTranslateX + 2)
-      worldRoot.getChildren.removeAll()
-      changeColor()
-    })
-
     //setup and start the Stage
     stage.setTitle("PPM Project 21/22")
     stage.setScene(scene)
@@ -213,16 +197,37 @@ class Main extends Application {
     //worldRoot.getChildren.add(intersectingBox)
     //worldRoot.getChildren.add(adjB3)
 
-    /*
     val models = FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt")
     models.map(m => worldRoot.getChildren.add(m))
     val octree = OctreeOps.generateOcTree(((0.0, 0.0, 0.0), 32), models, 6)
     val ocTreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
     OctreeOps.scaleOctree(5.0, octree)
     ocTreeBoxes.map(b => worldRoot.getChildren.add(b))
+
+    /*
+    println("to display:")
+    print(ModelOps.toDisplayAll(octree))
      */
 
+    //for now in Main...
+    def changeColor(): Unit = {
+      ModelOps.toDisplayModels(octree,List()).map(n=> {
+        if(n.isInstanceOf[Shape3D] && !n.asInstanceOf[Shape3D].getBoundsInParent.intersects(camVolume.getBoundsInParent)) {
+          n.asInstanceOf[Shape3D].setMaterial(blueMaterial)
+        }else {
+          n.asInstanceOf[Shape3D].setMaterial(greenMaterial) /*green material foi so para testar*/
+        }
+      })
+    }
+
+    //Mouse left click interaction
+    scene.setOnMouseClicked((event) => {
+      camVolume.setTranslateX(camVolume.getTranslateX + 2)
+      worldRoot.getChildren.removeAll()
+      changeColor()
+    })
   }
+
   override def init(): Unit = {
     println("init")
   }
