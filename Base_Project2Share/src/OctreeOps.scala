@@ -37,6 +37,8 @@ object OctreeOps {
         case x :: xs =>
          val newModel = ModelOps.createModelFromNode(x)
           newModel.setScaleX(x.getScaleX * fact)
+          newModel.setScaleY(x.getScaleY * fact)
+          newModel.setScaleZ(x.getScaleZ * fact)
          scale3DModels(fact, xs)
       }
     }
