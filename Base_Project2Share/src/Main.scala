@@ -9,16 +9,24 @@ import javafx.geometry.Pos
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
 import javafx.scene.{PerspectiveCamera, Scene, SceneAntialiasing, SubScene}
+import TextIO._
 
 class Main extends Application {
 
 
+    showPromptFile ()
+    val userInputFile = getUserInputFile()
+    val models = FileReader.createShapesFromFile(userInputFile)
 
-  /* T5
-  def mapColourEffect(func: Color => Color, oct:Octree[Placement]): Octree[Placement] = {
+  /*SÓ SCALEOCTREE POR ENQUANTO*/
+  showPromptMethods()
+  val userInputMethod = getUserInputMethod()
+  println(userInputMethod)
 
-  }
-  */
+
+
+    /*Ficheiro a escolher: */
+    /*Base_Project2Share/src/conf.txt*/
 
 
 
@@ -200,7 +208,7 @@ class Main extends Application {
 
     //SpaceOps.subSections((32.0, 0.0, 0.0), 32).foreach(m => worldRoot.getChildren.add(m))
 
-    OctreeOps.scaleOctree(1,oct1)
+    //OctreeOps.scaleOctree(1,oct1)
     //adding boxes b2 and b3 to the world
     //worldRoot.getChildren.add(b2)
     //worldRoot.getChildren.add(b3)
@@ -208,12 +216,26 @@ class Main extends Application {
     //worldRoot.getChildren.add(intersectingBox)
     //worldRoot.getChildren.add(adjB3)
 
-    val models = FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt")
+
+
     models.map(m => worldRoot.getChildren.add(m))
     val octree = OctreeOps.generateOcTree(((0.0, 0.0, 0.0), 32), models, 6)
+    /*MAIN VAI TER QUE SER ARRUMADO*/
+
+    userInputMethod match{
+      case "scaleOctree" => {
+        showPromptScaleOctree()
+        val userInputScale = getUserInputScaleOctree()
+        OctreeOps.scaleOctree(userInputScale,octree)
+      }
+      case _ => {
+        println("Não foi efectuada nenhuma operação na octree pois esse método não existe")
+      }
+    }
     val ocTreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
-    OctreeOps.scaleOctree(5.0, octree)
     ocTreeBoxes.map(b => worldRoot.getChildren.add(b))
+
+
 
   }
 
