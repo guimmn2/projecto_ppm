@@ -40,7 +40,7 @@ object OctreeOps {
           x.setScaleY(x.getScaleY * fact)
           x.setScaleZ(x.getScaleZ * fact)
           newModel :: scale3DModels(fact, xs)
-      } //esta a ser desprezado
+      }
     }
 
     oct match {
