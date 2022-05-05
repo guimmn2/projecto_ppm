@@ -223,7 +223,7 @@ class Main extends Application {
     /*MAIN VAI TER QUE SER ARRUMADO*/
 
     userInputMethod match{
-      case "scaleOctree" => {
+      case "SCALEOCTREE" => {
         showPromptScaleOctree()
         val userInputScale = getUserInputScaleOctree()
         OctreeOps.scaleOctree(userInputScale,octree)

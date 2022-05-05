@@ -33,11 +33,12 @@ object OctreeOps {
       lst match {
         case List() => List()
         case x :: xs =>
-         x.setScaleX(x.getScaleX * fact)
+          val newModel = ModelOps.createModelFromNode(x)
+          x.setScaleX(x.getScaleX * fact)
           x.setScaleY(x.getScaleY * fact)
           x.setScaleZ(x.getScaleZ * fact)
-         scale3DModels(fact, xs)
-      }
+          newModel :: scale3DModels(fact, xs)
+      } //esta a ser desprezado
     }
 
     oct match {

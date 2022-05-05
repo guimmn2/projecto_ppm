@@ -10,7 +10,7 @@ object TextIO {
   def getUserInputFile(): String = readLine.trim
 
   def showPromptMethods(): Unit = { print("\nEscolha um método só há ScaleOctree por enquanto: ")}
-  def getUserInputMethod(): String = readLine.trim
+  def getUserInputMethod(): String = readLine.trim.toUpperCase()
 
   def showPromptScaleOctree(): Unit = { print("\nEscolha o número para scale: ")}
   def getUserInputScaleOctree(): Double = readDouble()
