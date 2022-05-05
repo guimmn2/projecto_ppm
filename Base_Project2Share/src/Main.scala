@@ -197,7 +197,7 @@ class Main extends Application {
 
     //SpaceOps.subSections((32.0, 0.0, 0.0), 32).foreach(m => worldRoot.getChildren.add(m))
 
-    OctreeOps.scaleOctree(1,oct1)
+    //OctreeOps.scaleOctree(1,oct1)
     //adding boxes b2 and b3 to the world
     //worldRoot.getChildren.add(b2)
     //worldRoot.getChildren.add(b3)
@@ -209,7 +209,7 @@ class Main extends Application {
     models.map(m => worldRoot.getChildren.add(m))
     val octree = OctreeOps.generateOcTree(((0.0, 0.0, 0.0), 32), models, 6)
     val ocTreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
-    OctreeOps.scaleOctree(5.0, octree)
+    OctreeOps.scaleOctree(2, octree)
     ocTreeBoxes.map(b => worldRoot.getChildren.add(b))
     println("to display:")
     print(ModelOps.toDisplayAll(octree))
