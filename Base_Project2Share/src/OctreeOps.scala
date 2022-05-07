@@ -11,8 +11,8 @@ object OctreeOps {
       val appropriateModels = ModelOps.filterAppropriateModelsForPlacement(list, root)
       appropriateModels match {
         case x :: y => {
-          ModelOps.printModels(x :: y ++ ModelOps.filterModelsWithin(list, ModelOps.createBox(root)));
-          OcLeaf(root, x :: y ++ ModelOps.filterModelsWithin(list, ModelOps.createBox(root)))
+          ModelOps.printModels(x :: y ++ ModelOps.getRestOfModelsThatFit(x::y, list, ModelOps.createBox(root)));
+          OcLeaf(root, x :: y ++ ModelOps.getRestOfModelsThatFit(x::y, list, ModelOps.createBox(root)))
         }
         case List() => OcNode[Placement](
           root,
@@ -28,6 +28,8 @@ object OctreeOps {
       }
     }
   }
+
+  def generateDefaultOctree(list: List[Node]): Octree[Placement] = generateOcTree(((0.0,0.0,0.0), 32), list, 6)
 
   def scaleOctree(fact: Double, oct: Octree[Placement]): Octree[Placement] = {
     def scale3DModels(fact: Double, lst: List[Node]): List[Node] = {
@@ -80,10 +82,9 @@ object OctreeOps {
   val greenRemove = mapColourEffect(ModelOps.greenRemove)(_)
 
   def main(args: Array[String]): Unit = {
-    val models = FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt")
+    val models = FileReader.createShapesFromFile("./conf.txt")
     val root = ((0.0, 0.0, 0.0), 32.0)
     val maxDepth = 6
     val octree = generateOcTree(root, models, maxDepth)
-    val colouredOctree = mapColourEffect(ModelOps.greenRemove)(octree)
   }
 }

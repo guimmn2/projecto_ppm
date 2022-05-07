@@ -26,7 +26,11 @@ object ModelOps {
 
   def intersects(model: Node, box: Box): Boolean = !isWithin(model, box) && model.asInstanceOf[Shape3D].getBoundsInParent.intersects(box.getBoundsInParent)
 
-  def filterModelsWithin(list: List[Node], box: Box): List[Node] = list.filter(m => isWithin(m, box))
+  def getRestOfModelsThatFit(referenceModels: List[Node], allModels: List[Node], box: Box): List[Node] = {
+    allModels.filter(model => !referenceModels.contains(model) && isWithin(model, box))
+  }
+
+  def filterModelsWithin(models: List[Node], box: Box) = models.filter(m => isWithin(m, box))
 
   def areModelsWithin(list: List[Node], box: Box): Boolean = !filterModelsWithin(list, box).equals(List())
 
