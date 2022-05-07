@@ -9,11 +9,13 @@ object CLI {
 
   def getUserInput(): String = readLine.trim
 
-  def printFiles = getConfigFiles.foreach(f => {
-    var i = 1;
-    println(s" ${i} - ${f.getName.replaceFirst("^ \\.", "")}")
-    i = i + 1
-  })
+  def printFiles() = {
+    var i = 1
+    getConfigFiles.foreach(f => {
+      println(s" ${i} - ${f.getName.replaceFirst("^ \\.", "")}")
+      i = i + 1
+    })
+  }
 
   val getConfigFiles = getListOfFiles(new File("."), List("txt"))
 
