@@ -6,7 +6,6 @@ import scala.io.StdIn.{readInt, readLine}
 
 object CLI {
 
-
   def getUserInput(): String = readLine.trim
 
   def printFiles() = {
