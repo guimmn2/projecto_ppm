@@ -9,18 +9,9 @@ import javafx.geometry.Pos
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
 import javafx.scene.{PerspectiveCamera, Scene, SceneAntialiasing, SubScene}
+import TextIO._
 
 class Main extends Application {
-
-
-
-  /* T5
-  def mapColourEffect(func: Color => Color, oct:Octree[Placement]): Octree[Placement] = {
-
-  }
-  */
-
-
 
   //Auxiliary types
   type Point = (Double, Double, Double)
@@ -92,7 +83,7 @@ class Main extends Application {
     box1.setMaterial(greenMaterial)
 
     // 3D objects (group of nodes - javafx.scene.Node) that will be provide to the subScene
-    val worldRoot:Group = new Group(wiredBox, camVolume, lineX, lineY, lineZ, cylinder1, box1)
+    val worldRoot:Group = new Group(camVolume, lineX, lineY, lineZ)
 
     //loads objects into world
     /*FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt").map(x => worldRoot.getChildren.add(x))*/
@@ -148,71 +139,21 @@ class Main extends Application {
     //setup and start the Stage
     stage.setTitle("PPM Project 21/22")
     stage.setScene(scene)
+
+    println("escolha o ficheiro: ")
+    CLI.printFiles
+    print("-> ")
+
+    val octree = CLI.selectFile()
+    val scaledOctree = OctreeOps.scaleOctree(4, octree)
+    val octreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
+    val scaledOctreeBoxes = ModelOps.generateBoundingBoxes(scaledOctree, List())
+
+    //ModelOps.toDisplayAll(octree).foreach(m => worldRoot.getChildren.add(m))
+    ModelOps.toDisplayModels(octree, List()).foreach(m => worldRoot.getChildren.add(m))
+    scaledOctreeBoxes.foreach(b => worldRoot.getChildren.add(b))
+
     stage.show
-
-
-    //oct1 - example of an Octree[Placement] that contains only one Node (i.e. cylinder1)
-    //In case of difficulties to implement task T2 this octree can be used as input for tasks T3, T4 and T5
-
-    val placement1: Placement = ((0, 0, 0), 8.0)
-    val sec1: Section = (((0.0,0.0,0.0), 4.0), List(cylinder1.asInstanceOf[Node]))
-    val ocLeaf1 = OcLeaf(sec1)
-    val oct1:Octree[Placement] = OcNode[Placement](placement1, ocLeaf1, OcEmpty, OcEmpty, OcEmpty, OcEmpty, OcEmpty, OcEmpty, OcEmpty)
-    val oct2:Octree[Placement] = oct1
-
-    //example of bounding boxes (corresponding to the octree oct1) added manually to the world
-    val b2 = new Box(8,8,8)
-    //translate because it is added by defaut to the coords (0,0,0)
-    b2.setTranslateX(8/2)
-    b2.setTranslateY(8/2)
-    b2.setTranslateZ(8/2)
-    b2.setMaterial(redMaterial)
-    b2.setDrawMode(DrawMode.LINE)
-
-    val b3 = new Box(4,4,4)
-    //translate because it is added by defaut to the coords (0,0,0)
-    b3.setTranslateX(4/2)
-    b3.setTranslateY(4/2)
-    b3.setTranslateZ(4/2)
-    b3.setMaterial(greenMaterial)
-    b3.setDrawMode(DrawMode.LINE)
-
-    val adjB3 = new Box(4, 4, 4)
-    adjB3.setTranslateX(4 + 4/2)
-    adjB3.setTranslateY(4/2)
-    adjB3.setTranslateZ(4/2)
-    adjB3.setMaterial(greenMaterial)
-    adjB3.setDrawMode(DrawMode.LINE)
-
-    val cylinderBox = SpaceOps.createBox((0.0, 0.0, 0.0), 4)
-    val intersectingBox = SpaceOps.createBox((2.0, 0.0, 0.0),4)
-
-    println(s"is cylinder within cylinder box ? ${SpaceOps.isWithin(cylinder1, cylinderBox)}")
-    println(s"is cylinder intersecting cylinder box? ${SpaceOps.intersects(cylinder1, cylinderBox)}")
-    println(s"is cylinder intersecting intersecBox? ${SpaceOps.intersects(cylinder1, intersectingBox)}")
-    println(s"are any models within cylinder box? ${SpaceOps.areModelsWithin(List(cylinder1), cylinderBox)}")
-    println(s"is adjB3 within cylinderBox? ${SpaceOps.isWithin(adjB3, cylinderBox)}")
-    print("models within cylinderBox: ")
-    SpaceOps.printModels(SpaceOps.filterModelsWithin(List(cylinder1),cylinderBox))
-    print("models appropriate for cylinderBox: ")
-    SpaceOps.printModels(SpaceOps.filterAppropriateModelsForPlacement(List(cylinder1, cylinderBox, adjB3, cylinder1), ((0.0, 0.0, 0.0), 4)))
-
-
-    //SpaceOps.subSections((32.0, 0.0, 0.0), 32).foreach(m => worldRoot.getChildren.add(m))
-
-    OctreeOps.scaleOctree(1,oct1)
-    //adding boxes b2 and b3 to the world
-    //worldRoot.getChildren.add(b2)
-    //worldRoot.getChildren.add(b3)
-    //worldRoot.getChildren.add(cylinderBox)
-    //worldRoot.getChildren.add(intersectingBox)
-    //worldRoot.getChildren.add(adjB3)
-
-    val models = FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt")
-    models.foreach(m => worldRoot.getChildren.add(m))
-    val octree = OctreeOps.generateOcTree(((0.0, 0.0, 0.0), 32), models, 6)
-    val ocTreeBoxes = SpaceOps.generateBoundingBoxes(octree, List())
-    ocTreeBoxes.foreach(b => worldRoot.getChildren.add(b))
 
   }
 
