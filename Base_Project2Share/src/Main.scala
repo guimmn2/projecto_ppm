@@ -143,9 +143,16 @@ class Main extends Application {
     println("escolha o ficheiro: ")
     CLI.printFiles
     print("-> ")
-    ModelOps.toDisplayAll(OctreeOps.scaleOctree(2,CLI.selectFile())).foreach(model => worldRoot.getChildren.add(model))
-    //ModelOps.toDisplayAll(CLI.selectFile()).foreach(model => worldRoot.getChildren.add(model))
-    //ModelOps.printModels(ModelOps.toDisplayModels(CLI.selectFile(), List()))
+
+    val octree = CLI.selectFile()
+    val scaledOctree = OctreeOps.scaleOctree(4, octree)
+    val octreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
+    val scaledOctreeBoxes = ModelOps.generateBoundingBoxes(scaledOctree, List())
+
+    //ModelOps.toDisplayAll(octree).foreach(m => worldRoot.getChildren.add(m))
+    ModelOps.toDisplayModels(octree, List()).foreach(m => worldRoot.getChildren.add(m))
+    scaledOctreeBoxes.foreach(b => worldRoot.getChildren.add(b))
+
     stage.show
 
   }

@@ -140,6 +140,14 @@ object ModelOps {
     }
   }
 
+  def scaleModel(model: Node, factor: Double): Node = {
+    val resizedModel = createModelFromNode(model)
+    resizedModel.setScaleX(model.getScaleX * factor)
+    resizedModel.setScaleY(model.getScaleY * factor)
+    resizedModel.setScaleZ(model.getScaleZ * factor)
+    resizedModel
+  }
+
   def printModels(list: List[Node]): Unit = list.foreach(m => println(s"class: ${m.getClass}" +
     s" color: { red: ${getColor(m).getRed * 255}, green: ${getColor(m).getGreen * 255},  blue: ${getColor(m).getBlue * 255} }"))
 
@@ -159,7 +167,7 @@ object ModelOps {
     }
   }
 
-  def toDisplayAll(oct:Octree[Placement]):List[Node] = {
+  def toDisplayAll(oct:Octree[Placement]): List[Node] = {
     toDisplayModels(oct,List()) ++ generateBoundingBoxes(oct,List())
   }
 
