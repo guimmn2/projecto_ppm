@@ -145,13 +145,13 @@ class Main extends Application {
     print("-> ")
 
     val octree = CLI.selectFile()
-    val scaledOctree = OctreeOps.scaleOctree(4, octree)
+    val scaledOctree = OctreeOps.scaleOctree(3, octree)
     val octreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
     val scaledOctreeBoxes = ModelOps.generateBoundingBoxes(scaledOctree, List())
 
-    //ModelOps.toDisplayAll(octree).foreach(m => worldRoot.getChildren.add(m))
-    ModelOps.toDisplayModels(octree, List()).foreach(m => worldRoot.getChildren.add(m))
-    scaledOctreeBoxes.foreach(b => worldRoot.getChildren.add(b))
+    ModelOps.toDisplayAll(scaledOctree).foreach(m => worldRoot.getChildren.add(m))
+   // ModelOps.toDisplayModels(octree, List()).foreach(m => worldRoot.getChildren.add(m))
+    //scaledOctreeBoxes.foreach(b => worldRoot.getChildren.add(b))
 
     stage.show
 

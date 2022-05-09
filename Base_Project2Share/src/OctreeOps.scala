@@ -2,6 +2,8 @@ import Types._
 import javafx.scene.Node
 import javafx.scene.paint.Color
 
+import scala.annotation.tailrec
+
 object OctreeOps {
 
   def generateOcTree(root: Placement, list: List[Node], maxDepth: Int): Octree[Placement] = {
@@ -36,13 +38,19 @@ object OctreeOps {
       lst match {
         case List() => List()
         case x :: xs =>
-          val newModel = ModelOps.scaleModel(ModelOps.createModelFromNode(x), fact)
+          val newModel = ModelOps.createModelFromNode(x)
+          newModel.setScaleX(x.getScaleX * fact)
+          newModel.setScaleY(x.getScaleY * fact)
+          newModel.setScaleZ(x.getScaleZ * fact)
+          newModel.setTranslateX(x.getTranslateX * fact)
+          newModel.setTranslateY(x.getTranslateY * fact)
+          newModel.setTranslateZ(x.getTranslateZ * fact)
           newModel :: scale3DModels(fact, xs)
       }
     }
     oct match {
       case OcEmpty => OcEmpty
-      case OcLeaf(section: Section) => OcLeaf((section._1._1, section._1._2 * fact), scale3DModels(fact, section._2))
+      case OcLeaf(section: Section) => OcLeaf((section._1._1, section._1._2 ), scale3DModels(fact, section._2))
       case OcNode(((x, y, z), size), oc1, oc2, oc3, oc4, oc5, oc6, oc7, oc8) =>
         OcNode(((x, y, z), size * fact), scaleOctree(fact, oc1), scaleOctree(fact, oc2),
           scaleOctree(fact, oc3), scaleOctree(fact, oc4), scaleOctree(fact, oc5), scaleOctree(fact, oc6),
