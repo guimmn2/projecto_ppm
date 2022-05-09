@@ -43,10 +43,9 @@ object OctreeOps {
           newModel :: scale3DModels(fact, xs)
       }
     }
-
     oct match {
       case OcEmpty => OcEmpty
-      case OcLeaf(section: Section) => OcLeaf(section._1._1, section._1._2 * fact, scale3DModels(fact, section._2))
+      case OcLeaf(section: Section) => OcLeaf((section._1._1, section._1._2 * fact), scale3DModels(fact, section._2))
       case OcNode(((x, y, z), size), oc1, oc2, oc3, oc4, oc5, oc6, oc7, oc8) =>
         OcNode(((x, y, z), size * fact), scaleOctree(fact, oc1), scaleOctree(fact, oc2),
           scaleOctree(fact, oc3), scaleOctree(fact, oc4), scaleOctree(fact, oc5), scaleOctree(fact, oc6),

@@ -143,7 +143,8 @@ class Main extends Application {
     println("escolha o ficheiro: ")
     CLI.printFiles
     print("-> ")
-    ModelOps.toDisplayAll(CLI.selectFile()).foreach(model => worldRoot.getChildren.add(model))
+    ModelOps.toDisplayAll(OctreeOps.scaleOctree(2,CLI.selectFile())).foreach(model => worldRoot.getChildren.add(model))
+    //ModelOps.toDisplayAll(CLI.selectFile()).foreach(model => worldRoot.getChildren.add(model))
     //ModelOps.printModels(ModelOps.toDisplayModels(CLI.selectFile(), List()))
     stage.show
 
