@@ -140,6 +140,8 @@ object ModelOps {
     }
   }
 
+  def log2(x: Double) = Math.log10(x)/Math.log10(2.0)
+
   def printModels(list: List[Node]): Unit = list.foreach(m => println(s"class: ${m.getClass}" +
     s" color: { red: ${getColor(m).getRed * 255}, green: ${getColor(m).getGreen * 255},  blue: ${getColor(m).getBlue * 255} }"))
 
@@ -163,4 +165,18 @@ object ModelOps {
     toDisplayModels(oct,List()) ++ generateBoundingBoxes(oct,List())
   }
 
+  def scale3dModels(list: List[Node], factor: Double) = {
+    list.map(m => {
+      val newModel = createModelFromNode(m)
+      newModel.setScaleX(m.getScaleX * factor)
+      newModel.setScaleY(m.getScaleY * factor)
+      newModel.setScaleZ(m.getScaleZ * factor)
+      newModel.setTranslateX(m.getTranslateX + newModel.getScaleX / 2)
+      newModel.setTranslateY(m.getTranslateY + newModel.getScaleY / 2)
+      newModel.setTranslateZ(m.getTranslateZ + newModel.getScaleZ / 2)
+      newModel
+    })
+  }
+
+  def main(args: Array[String]) = println(log2(32.0))
 }
