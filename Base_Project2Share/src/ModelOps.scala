@@ -115,8 +115,8 @@ object ModelOps {
       val material = data.getMaterial
       val cylinder = new Cylinder(dimensions._1, dimensions._2, dimensions._3)
       cylinder.setTranslateX(coords._1)
-      cylinder.setTranslateY(coords._1)
-      cylinder.setTranslateZ(coords._1)
+      cylinder.setTranslateY(coords._2)
+      cylinder.setTranslateZ(coords._3)
       cylinder.setScaleX(scale._1)
       cylinder.setScaleY(scale._2)
       cylinder.setScaleZ(scale._3)
@@ -130,8 +130,8 @@ object ModelOps {
       val material = data.getMaterial
       val box = new Box(dimensions._1, dimensions._2, dimensions._3)
       box.setTranslateX(coords._1)
-      box.setTranslateY(coords._1)
-      box.setTranslateZ(coords._1)
+      box.setTranslateY(coords._2)
+      box.setTranslateZ(coords._3)
       box.setScaleX(scale._1)
       box.setScaleY(scale._2)
       box.setScaleZ(scale._3)
@@ -140,13 +140,7 @@ object ModelOps {
     }
   }
 
-  def scaleModel(model: Node, factor: Double): Node = {
-    val resizedModel = createModelFromNode(model)
-    resizedModel.setScaleX(model.getScaleX * factor)
-    resizedModel.setScaleY(model.getScaleY * factor)
-    resizedModel.setScaleZ(model.getScaleZ * factor)
-    resizedModel
-  }
+  def log2(x: Double) = Math.log10(x)/Math.log10(2.0)
 
   def printModels(list: List[Node]): Unit = list.foreach(m => println(s"class: ${m.getClass}" +
     s" color: { red: ${getColor(m).getRed * 255}, green: ${getColor(m).getGreen * 255},  blue: ${getColor(m).getBlue * 255} }"))
@@ -171,4 +165,18 @@ object ModelOps {
     toDisplayModels(oct,List()) ++ generateBoundingBoxes(oct,List())
   }
 
+  def scale3dModels(list: List[Node], factor: Double) = {
+    list.map(m => {
+      val newModel = createModelFromNode(m)
+      newModel.setScaleX(m.getScaleX * factor)
+      newModel.setScaleY(m.getScaleY * factor)
+      newModel.setScaleZ(m.getScaleZ * factor)
+      newModel.setTranslateX(m.getTranslateX * factor)
+      newModel.setTranslateY(m.getTranslateY * factor)
+      newModel.setTranslateZ(m.getTranslateZ * factor)
+      newModel
+    })
+  }
+
+  def main(args: Array[String]) = println(log2(32.0))
 }

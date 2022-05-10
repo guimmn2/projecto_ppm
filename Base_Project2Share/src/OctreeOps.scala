@@ -2,6 +2,8 @@ import Types._
 import javafx.scene.Node
 import javafx.scene.paint.Color
 
+import scala.annotation.tailrec
+
 object OctreeOps {
 
   def generateOcTree(root: Placement, list: List[Node], maxDepth: Int): Octree[Placement] = {
@@ -36,7 +38,10 @@ object OctreeOps {
       lst match {
         case List() => List()
         case x :: xs =>
-          val newModel = ModelOps.scaleModel(ModelOps.createModelFromNode(x), fact)
+          val newModel = ModelOps.createModelFromNode(x)
+          newModel.setScaleX(x.getScaleX * fact)
+          newModel.setScaleY(x.getScaleY * fact)
+          newModel.setScaleZ(x.getScaleZ * fact)
           newModel :: scale3DModels(fact, xs)
       }
     }
@@ -47,6 +52,32 @@ object OctreeOps {
         OcNode(((x, y, z), size * fact), scaleOctree(fact, oc1), scaleOctree(fact, oc2),
           scaleOctree(fact, oc3), scaleOctree(fact, oc4), scaleOctree(fact, oc5), scaleOctree(fact, oc6),
           scaleOctree(fact, oc7), scaleOctree(fact, oc8))
+    }
+  }
+
+  //Esta funciona!
+  def scaleOctreeV2(octree: Octree[Placement], factor: Double): Octree[Placement] = {
+    val models = getModelListFromOctree(octree, List())
+    val scaledModels = ModelOps.scale3dModels(models, factor)
+    val root = octree.asInstanceOf[OcNode[Placement]].coords
+    val scaledSize = root._2 * factor
+    println(s"${(ModelOps.log2(scaledSize) + 1.0).toInt}")
+    generateOcTree((root._1, scaledSize), scaledModels, (ModelOps.log2(scaledSize) + 1.0).toInt)
+  }
+
+  private def getModelListFromOctree(octree: Octree[Placement], list: List[Node]): List[Node] = {
+    octree match {
+      case OcLeaf(section: Section) => section._2
+      case OcEmpty => Nil
+      case OcNode(_, up_00, up_01, up_10, up_11, down_00, down_01, down_10, down_11) =>
+        getModelListFromOctree(up_00, list) ++
+          getModelListFromOctree(up_01, list) ++
+          getModelListFromOctree(up_10, list) ++
+          getModelListFromOctree(up_11, list) ++
+          getModelListFromOctree(down_00, list) ++
+          getModelListFromOctree(down_01, list) ++
+          getModelListFromOctree(down_10, list) ++
+          getModelListFromOctree(down_11, list)
     }
   }
 
@@ -78,9 +109,11 @@ object OctreeOps {
   val greenRemove = mapColourEffect(ModelOps.greenRemove)(_)
 
   def main(args: Array[String]): Unit = {
-    val models = FileReader.createShapesFromFile("./conf.txt")
-    val root = ((0.0, 0.0, 0.0), 32.0)
-    val maxDepth = 6
-    val octree = generateOcTree(root, models, maxDepth)
+    val octree = generateDefaultOctree(FileReader.createShapesFromFile("./conf2.txt"))
+    val models = getModelListFromOctree(octree, List())
+    println("models from func: ")
+    ModelOps.printModels(models)
+    println("scaled models: ")
+    ModelOps.printModels(ModelOps.scale3dModels(models, 2.0))
   }
 }
