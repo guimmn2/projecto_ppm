@@ -115,8 +115,8 @@ object ModelOps {
       val material = data.getMaterial
       val cylinder = new Cylinder(dimensions._1, dimensions._2, dimensions._3)
       cylinder.setTranslateX(coords._1)
-      cylinder.setTranslateY(coords._1)
-      cylinder.setTranslateZ(coords._1)
+      cylinder.setTranslateY(coords._2)
+      cylinder.setTranslateZ(coords._3)
       cylinder.setScaleX(scale._1)
       cylinder.setScaleY(scale._2)
       cylinder.setScaleZ(scale._3)
@@ -130,8 +130,8 @@ object ModelOps {
       val material = data.getMaterial
       val box = new Box(dimensions._1, dimensions._2, dimensions._3)
       box.setTranslateX(coords._1)
-      box.setTranslateY(coords._1)
-      box.setTranslateZ(coords._1)
+      box.setTranslateY(coords._2)
+      box.setTranslateZ(coords._3)
       box.setScaleX(scale._1)
       box.setScaleY(scale._2)
       box.setScaleZ(scale._3)
@@ -171,9 +171,9 @@ object ModelOps {
       newModel.setScaleX(m.getScaleX * factor)
       newModel.setScaleY(m.getScaleY * factor)
       newModel.setScaleZ(m.getScaleZ * factor)
-      newModel.setTranslateX(m.getTranslateX + newModel.getScaleX / 2)
-      newModel.setTranslateY(m.getTranslateY + newModel.getScaleY / 2)
-      newModel.setTranslateZ(m.getTranslateZ + newModel.getScaleZ / 2)
+      newModel.setTranslateX(m.getTranslateX * factor)
+      newModel.setTranslateY(m.getTranslateY * factor)
+      newModel.setTranslateZ(m.getTranslateZ * factor)
       newModel
     })
   }

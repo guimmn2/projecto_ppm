@@ -145,8 +145,8 @@ class Main extends Application {
     print("-> ")
 
     val octree = CLI.selectFile()
-    val scaledOctree = OctreeOps.scaleOctree(1, octree)
-    val scaledOctreeV2 = OctreeOps.scaleOctreeV2(octree, 2)
+    val scaledOctree = OctreeOps.scaleOctree(2, octree)
+    val scaledOctreeV2 = OctreeOps.scaleOctreeV2(octree, 0.5)
     val octreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
     val scaledOctreeBoxes = ModelOps.generateBoundingBoxes(scaledOctree, List())
 

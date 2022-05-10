@@ -42,9 +42,6 @@ object OctreeOps {
           newModel.setScaleX(x.getScaleX * fact)
           newModel.setScaleY(x.getScaleY * fact)
           newModel.setScaleZ(x.getScaleZ * fact)
-          newModel.setTranslateX(x.getTranslateX + newModel.getScaleX / 2)
-          newModel.setTranslateY(x.getTranslateY + newModel.getScaleY / 2)
-          newModel.setTranslateZ(x.getTranslateZ * newModel.getScaleZ / 2)
           newModel :: scale3DModels(fact, xs)
       }
     }
@@ -58,27 +55,29 @@ object OctreeOps {
     }
   }
 
+  //Esta funciona!
   def scaleOctreeV2(octree: Octree[Placement], factor: Double): Octree[Placement] = {
-    val models = getModelLisFromOctree(octree, List())
+    val models = getModelListFromOctree(octree, List())
     val scaledModels = ModelOps.scale3dModels(models, factor)
     val root = octree.asInstanceOf[OcNode[Placement]].coords
     val scaledSize = root._2 * factor
-    generateOcTree((root._1, scaledSize), scaledModels, ModelOps.log2(scaledSize + 1).toInt)
+    println(s"${(ModelOps.log2(scaledSize) + 1.0).toInt}")
+    generateOcTree((root._1, scaledSize), scaledModels, (ModelOps.log2(scaledSize) + 1.0).toInt)
   }
 
-  private def getModelLisFromOctree(octree: Octree[Placement], list: List[Node]): List[Node] = {
+  private def getModelListFromOctree(octree: Octree[Placement], list: List[Node]): List[Node] = {
     octree match {
       case OcLeaf(section: Section) => section._2
       case OcEmpty => Nil
       case OcNode(_, up_00, up_01, up_10, up_11, down_00, down_01, down_10, down_11) =>
-        getModelLisFromOctree(up_00, list) ++
-          getModelLisFromOctree(up_01, list) ++
-          getModelLisFromOctree(up_10, list) ++
-          getModelLisFromOctree(up_11, list) ++
-          getModelLisFromOctree(down_00, list) ++
-          getModelLisFromOctree(down_01, list) ++
-          getModelLisFromOctree(down_10, list) ++
-          getModelLisFromOctree(down_11, list)
+        getModelListFromOctree(up_00, list) ++
+          getModelListFromOctree(up_01, list) ++
+          getModelListFromOctree(up_10, list) ++
+          getModelListFromOctree(up_11, list) ++
+          getModelListFromOctree(down_00, list) ++
+          getModelListFromOctree(down_01, list) ++
+          getModelListFromOctree(down_10, list) ++
+          getModelListFromOctree(down_11, list)
     }
   }
 
@@ -111,9 +110,10 @@ object OctreeOps {
 
   def main(args: Array[String]): Unit = {
     val octree = generateDefaultOctree(FileReader.createShapesFromFile("./conf2.txt"))
-    val models = getModelLisFromOctree(octree, List())
+    val models = getModelListFromOctree(octree, List())
     println("models from func: ")
     ModelOps.printModels(models)
     println("scaled models: ")
+    ModelOps.printModels(ModelOps.scale3dModels(models, 2.0))
   }
 }
