@@ -75,13 +75,13 @@ object ModelOps {
       case OcNode(root, a, b, c, d, e, f, g, h) =>
         createBox(root) ::
           generateBoundingBoxes(a, list) ++
-          generateBoundingBoxes(b, list) ++
-          generateBoundingBoxes(c, list) ++
-          generateBoundingBoxes(d, list) ++
-          generateBoundingBoxes(e, list) ++
-          generateBoundingBoxes(f, list) ++
-          generateBoundingBoxes(g, list) ++
-          generateBoundingBoxes(h, list)
+            generateBoundingBoxes(b, list) ++
+            generateBoundingBoxes(c, list) ++
+            generateBoundingBoxes(d, list) ++
+            generateBoundingBoxes(e, list) ++
+            generateBoundingBoxes(f, list) ++
+            generateBoundingBoxes(g, list) ++
+            generateBoundingBoxes(h, list)
     }
   }
 
@@ -97,11 +97,21 @@ object ModelOps {
 
   //color funcs
   val curryGreenRemove = applyColourEffect(greenRemove)(_)
+  val currySepia = applyColourEffect(sepia)(_)
+
   def greenRemove(c: Color): Color = Color.rgb((c.getRed * 255).toInt, 0, (c.getBlue * 255).toInt)
+
+  def sepia(c: Color): Color = {
+    Color.rgb(
+      (c.getRed * 255 * 0.4 + c.getGreen * 255 * 0.77 + c.getBlue * 255 * 0.2).toInt,
+      (c.getRed * 255 * 0.35 + c.getGreen * 255 * 0.69 + c.getBlue * 255 * 0.17).toInt,
+      (c.getRed * 255 * 0.27 + c.getGreen * 255 * 0.53 + c.getBlue * 255 * 0.13).toInt
+    )
+  }
 
   //we did this because we were having trouble with pointers. Wasn't creating a new value equal to the Nodes we wanted ...
   def createModelFromNode(node: Node): Node = {
-    if(node.isInstanceOf[Cylinder]) {
+    if (node.isInstanceOf[Cylinder]) {
       val data = node.asInstanceOf[Cylinder]
       val coords = (data.getTranslateX, data.getTranslateY, data.getTranslateZ)
       val scale = (data.getScaleX, data.getScaleY, data.getScaleZ)
