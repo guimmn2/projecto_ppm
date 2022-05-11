@@ -23,10 +23,11 @@ class Main extends Application {
   val userInputMethod = getUserInputMethod()
   println(userInputMethod)
 
+  /* T5
+  def mapColourEffect(func: Color => Color, oct:Octree[Placement]): Octree[Placement] = {
 
-
-    /*Ficheiro a escolher: */
-    /*Base_Project2Share/src/conf.txt*/
+  }
+  */
 
 
 
@@ -85,12 +86,12 @@ class Main extends Application {
     wiredBox.setDrawMode(DrawMode.LINE)
 
     val cylinder1 = new Cylinder(0.5, 1, 10)
-    cylinder1.setTranslateX(6)
+    cylinder1.setTranslateX(2)
     cylinder1.setTranslateY(2)
     cylinder1.setTranslateZ(2)
-    cylinder1.setScaleX(2)
-    cylinder1.setScaleY(2)
-    cylinder1.setScaleZ(2)
+    cylinder1.setScaleX(6)
+    cylinder1.setScaleY(6)
+    cylinder1.setScaleZ(6)
     cylinder1.setMaterial(greenMaterial)
 
     val box1 = new Box(1, 1, 1)  //
@@ -208,7 +209,7 @@ class Main extends Application {
 
     //SpaceOps.subSections((32.0, 0.0, 0.0), 32).foreach(m => worldRoot.getChildren.add(m))
 
-    //OctreeOps.scaleOctree(1,oct1)
+    OctreeOps.scaleOctree(1,oct1)
     //adding boxes b2 and b3 to the world
     //worldRoot.getChildren.add(b2)
     //worldRoot.getChildren.add(b3)
@@ -216,26 +217,14 @@ class Main extends Application {
     //worldRoot.getChildren.add(intersectingBox)
     //worldRoot.getChildren.add(adjB3)
 
-
-
+    /*
+    val models = FileReader.createShapesFromFile("Base_Project2Share/src/conf.txt")
     models.map(m => worldRoot.getChildren.add(m))
     val octree = OctreeOps.generateOcTree(((0.0, 0.0, 0.0), 32), models, 6)
-    /*MAIN VAI TER QUE SER ARRUMADO*/
-
-    userInputMethod match{
-      case "SCALEOCTREE" => {
-        showPromptScaleOctree()
-        val userInputScale = getUserInputScaleOctree()
-        OctreeOps.scaleOctree(userInputScale,octree)
-      }
-      case _ => {
-        println("Não foi efectuada nenhuma operação na octree pois esse método não existe")
-      }
-    }
     val ocTreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
+    OctreeOps.scaleOctree(5.0, octree)
     ocTreeBoxes.map(b => worldRoot.getChildren.add(b))
-
-
+     */
 
   }
 
