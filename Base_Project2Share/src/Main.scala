@@ -9,6 +9,7 @@ import javafx.geometry.Pos
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
 import javafx.scene.{PerspectiveCamera, Scene, SceneAntialiasing, SubScene}
+import scala.collection.JavaConverters._
 
 class Main extends Application {
 
@@ -53,6 +54,9 @@ class Main extends Application {
 
     val whiteMaterial = new PhongMaterial()
     whiteMaterial.setDiffuseColor(Color.rgb(255,255,255))
+
+    val purpleMaterial = new PhongMaterial()
+    purpleMaterial.setDiffuseColor(Color.rgb(150, 0, 150))
 
     //3D objects
     val lineX = new Line(0, 0, 200, 0)
@@ -144,10 +148,19 @@ class Main extends Application {
 
 
     //T3 Altera a cor
-    def changeColor(): Unit = {
+    //TODO - já recebe lista como argumento, agora é usar recursividade em vez de ciclo
+    def changeColor(l: List[Node]): Unit = {
+
       worldRoot.getChildren.forEach(n=> {
         if(n.isInstanceOf[Shape3D] && !n.asInstanceOf[Shape3D].getBoundsInParent.intersects(camVolume.getBoundsInParent)) {
-          n.asInstanceOf[Shape3D].setMaterial(whiteMaterial)
+          if (n.asInstanceOf[Shape3D].getDrawMode != DrawMode.FILL) {
+            n.asInstanceOf[Shape3D].setMaterial(whiteMaterial)
+          }
+        }
+        else if(n.isInstanceOf[Shape3D] && n.asInstanceOf[Shape3D].getBoundsInParent.intersects(camVolume.getBoundsInParent) && !n.equals(camVolume)) {
+          if (n.asInstanceOf[Shape3D].getDrawMode != DrawMode.FILL) {
+            n.asInstanceOf[Shape3D].setMaterial(purpleMaterial)
+          }
         }
       })
     }
@@ -156,7 +169,7 @@ class Main extends Application {
     scene.setOnMouseClicked((event) => {
       camVolume.setTranslateX(camVolume.getTranslateX + 2)
       worldRoot.getChildren.removeAll()
-      changeColor()
+      changeColor(worldRoot.getChildren.asScala.toList)
     })
 
     //setup and start the Stage
@@ -227,7 +240,12 @@ class Main extends Application {
     val octree = OctreeOps.generateOcTree(((0.0, 0.0, 0.0), 32), models, 6)
     val ocTreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
     OctreeOps.scaleOctree(5.0, octree)
-    ocTreeBoxes.map(b => worldRoot.getChildren.add(b))
+    ocTreeBoxes.map(b => {
+      if (!b.asInstanceOf[Shape3D].getBoundsInParent.intersects(camVolume.asInstanceOf[Shape3D].getBoundsInParent)) {
+        b.asInstanceOf[Shape3D].setMaterial(whiteMaterial)
+      }
+      worldRoot.getChildren.add(b)
+    })
 
   }
   override def init(): Unit = {
