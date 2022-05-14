@@ -1,141 +1,120 @@
-import TextIO.{getConfigFiles, printFiles}
 import Types.Placement
+import javafx.application.Application
+import javafx.geometry.{Insets, Pos}
+import javafx.scene.layout.StackPane
+import javafx.scene.{Group, PerspectiveCamera, Scene, SceneAntialiasing, SubScene}
+import javafx.scene.paint.{Color, PhongMaterial}
+import javafx.scene.shape.{Box, Cylinder, DrawMode, Line}
+import javafx.scene.transform.Rotate
+import javafx.stage.Stage
 
-import java.io.File
-import scala.io.StdIn.{readDouble, readInt, readLine}
+class CLI extends Application {
+  override def start(stage: Stage): Unit = {
+    //Get and print program arguments (args: Array[String])
+    val params = getParameters
+    println("Program arguments:" + params.getRaw)
 
-case class State(fileNr: Int, scale: Int, colourOp: Int)
+    //Materials to be applied to the 3D objects
+    val redMaterial = new PhongMaterial()
+    redMaterial.setDiffuseColor(Color.rgb(150,0,0))
 
-object CLI {
+    val greenMaterial = new PhongMaterial()
+    greenMaterial.setDiffuseColor(Color.rgb(0,255,0))
 
-  def promptFileOptions() = {
-    var i = 1
-    println("choose file:")
-    getConfigFiles.foreach(f => {
-      println(s"${i} - ${f.getName.replaceFirst("^ \\.", "")}")
-      i = i + 1
+    val blueMaterial = new PhongMaterial()
+    blueMaterial.setDiffuseColor(Color.rgb(0,0,150))
+
+    //3D objects
+    val lineX = new Line(0, 0, 200, 0)
+    lineX.setStroke(Color.GREEN)
+
+    val lineY = new Line(0, 0, 0, 200)
+    lineY.setStroke(Color.YELLOW)
+
+    val lineZ = new Line(0, 0, 200, 0)
+    lineZ.setStroke(Color.LIGHTSALMON)
+    lineZ.getTransforms().add(new Rotate(-90, 0, 0, 0, Rotate.Y_AXIS))
+
+    val camVolume = new Cylinder(10, 50, 10)
+    camVolume.setTranslateX(1)
+    camVolume.getTransforms().add(new Rotate(45, 0, 0, 0, Rotate.X_AXIS))
+    camVolume.setMaterial(blueMaterial)
+    camVolume.setDrawMode(DrawMode.LINE)
+
+    // 3D objects (group of nodes - javafx.scene.Node) that will be provide to the subScene
+    val worldRoot:Group = new Group(camVolume, lineX, lineY, lineZ)
+    // Camera
+    val camera = new PerspectiveCamera(true)
+
+    val cameraTransform = new CameraTransformer
+    cameraTransform.setTranslate(0, 0, 0)
+    cameraTransform.getChildren.add(camera)
+    camera.setNearClip(0.1)
+    camera.setFarClip(10000.0)
+
+    camera.setTranslateZ(-500)
+    camera.setFieldOfView(20)
+    cameraTransform.ry.setAngle(-45.0)
+    cameraTransform.rx.setAngle(-45.0)
+    worldRoot.getChildren.add(cameraTransform)
+
+    // SubScene - composed by the nodes present in the worldRoot
+    val subScene = new SubScene(worldRoot, 800, 600, true, SceneAntialiasing.BALANCED)
+    subScene.setFill(Color.DARKSLATEGRAY)
+    subScene.setCamera(camera)
+
+    // CameraView - an additional perspective of the environment
+    val cameraView = new CameraView(subScene)
+    cameraView.setFirstPersonNavigationEabled(true)
+    cameraView.setFitWidth(350)
+    cameraView.setFitHeight(225)
+    cameraView.getRx.setAngle(-45)
+    cameraView.getT.setZ(-100)
+    cameraView.getT.setY(-500)
+    cameraView.getCamera.setTranslateZ(-50)
+    cameraView.startViewing
+
+    // Position of the CameraView: Right-bottom corner
+    StackPane.setAlignment(cameraView, Pos.BOTTOM_RIGHT)
+    StackPane.setMargin(cameraView, new Insets(5))
+
+    // Scene - defines what is rendered (in this case the subScene and the cameraView)
+    val root = new StackPane(subScene, cameraView)
+    subScene.widthProperty.bind(root.widthProperty)
+    subScene.heightProperty.bind(root.heightProperty)
+
+    val scene = new Scene(root, 810, 610, true, SceneAntialiasing.BALANCED)
+
+    //Mouse left click interaction
+    scene.setOnMouseClicked((event) => {
+      camVolume.setTranslateX(camVolume.getTranslateX + 2)
+      worldRoot.getChildren.removeAll()
     })
-    println("0 - quit")
-    print("-> ")
+
+    //setup and start the Stage
+    stage.setTitle("PPM Project 21/22")
+    stage.setScene(scene)
+
+    //initialize cli and generate octree from inputs
+    val octree = CLIUtils.generateOctreeFromUserInput()
+    //send octree components to the world
+    ModelOps.toDisplayAll(octree.asInstanceOf[Octree[Placement]]).foreach(x => worldRoot.getChildren.add(x))
+
+    stage.show()
   }
 
-  def getAndHandlefileSelection(): Int = {
-    promptFileOptions()
-    val selected = readInt()
-    if(selected < 0 || selected > getConfigFiles.length) {
-      println("invalid file number")
-      getAndHandlefileSelection()
-    }
-    else selected
+  override def init(): Unit = {
+    println("init")
   }
 
-  def getAndHandleOpSelection(): (Double, Int) = {
-    promptOps()
-    val selected = readInt()
-    if(selected < 0 || selected > 2) {
-      println("invalid option")
-      getAndHandleOpSelection()
-    }
-    println(s"selected: ${selected}")
-    if(selected == 1) {
-      val scale = getAndHandleScale()
-      val selected = validateAndReturnInput("do you wish to apply a colourOperation?")
-      if(selected == 1) {
-        val colourOp = getAndHandleColourOp()
-        (scale, colourOp)
-      } else {
-        (scale, 0)
-      }
-    } else {
-      println("at else")
-      val colourOp = getAndHandleColourOp()
-      val selected = validateAndReturnInput("do you wish to scale ?")
-      if(selected == 1) {
-        val scale = getAndHandleScale()
-        (scale, colourOp)
-      } else {
-        (1, colourOp)
-      }
-    }
+  override def stop(): Unit = {
+    println("stopped")
   }
+}
 
-  def validateAndReturnInput(prompt: String): Int = {
-    println(prompt)
-    println("1 - yes\n2 - no")
-    val selected = readInt()
-    if(selected < 1 || selected > 2) {
-      println("invalid option")
-      validateAndReturnInput(prompt)
-    }
-    else selected
-  }
+object FxApp {
 
-  def getAndHandleScale(): Double = {
-    promptScale()
-    val scale = readDouble()
-    if(scale < 0) {
-      println("invalid scale")
-      getAndHandleScale()
-    }
-    else scale
-  }
-
-  def getAndHandleColourOp(): Int = {
-    promptColourOps()
-    val colourOp = readInt()
-    if(colourOp < 1 || colourOp > 2) {
-      println("invalid colour operation option")
-      getAndHandleColourOp()
-    }
-    else colourOp
-  }
-
-  def promptOps() = {
-    print("choose operation:\n1 - scale\n2 - colour\n")
-    print("-> ")
-  }
-
-  def promptScale() = {
-    println("enter scale factor, must not be negative")
-    print("-> ")
-  }
-
-  def promptColourOps() = {
-    print("choose colour op:\n1 - greenRemove\n2 - sepia\n")
-    print("-> ")
-  }
-
-  val getConfigFiles = getListOfFiles(new File("."), List("txt"))
-
-  private def getListOfFiles(dir: File, extensions: List[String]): List[File] = {
-    dir.listFiles.filter(_.isFile).toList.filter { file =>
-      extensions.exists(file.getName.endsWith(_))
-    }
-  }
-
-  def generateOctreeFromFileNr(fileNr: Int): Octree[Placement] = {
-    fileNr match {
-      case x => val models = FileReader.createShapesFromFile(getConfigFiles(x - 1).getCanonicalPath)
-      OctreeOps.generateDefaultOctree(models)
-    }
-  }
-
-  def mainLoop() {
-    //show options, collect inputs
-    //handle inputs
-    //pass state
-    val fileNr = getAndHandlefileSelection()
-    if(fileNr == 0) {
-      println("quitting")
-      return
-    }
-    val opArgs = getAndHandleOpSelection()
-    println(s"fileNr:${fileNr}")
-    println(s"opArgs:${opArgs}")
-    println("launching app")
-  }
-
-  def main(args: Array[String]) = {
-    mainLoop()
+  def main(args: Array[String]): Unit = {
+    Application.launch(classOf[Main], args: _*)
   }
 }

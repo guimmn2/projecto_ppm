@@ -9,7 +9,6 @@ import javafx.geometry.Pos
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
 import javafx.scene.{PerspectiveCamera, Scene, SceneAntialiasing, SubScene}
-import TextIO._
 
 class Main extends Application {
 
@@ -140,17 +139,12 @@ class Main extends Application {
     stage.setTitle("PPM Project 21/22")
     stage.setScene(scene)
 
-    println("escolha o ficheiro: ")
-    CLI.promptFileOptions()
-    print("-> ")
-
-    val octree = CLI.generateOctreeFromFileNr(1)
-    val scaledOctree = OctreeOps.scaleOctree(2, octree)
-    val scaledOctreeV2 = OctreeOps.scaleOctreeV2(octree, 0.5)
+    val octree = OctreeOps.generateDefaultOctree(FileReader.createShapesFromFile("./conf.txt"))
+    val scaledOctree = OctreeOps.scaleOctree(octree, 2)
     val octreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
     val scaledOctreeBoxes = ModelOps.generateBoundingBoxes(scaledOctree, List())
 
-    ModelOps.toDisplayAll(scaledOctreeV2).foreach(m => worldRoot.getChildren.add(m))
+    ModelOps.toDisplayAll(scaledOctree).foreach(m => worldRoot.getChildren.add(m))
    // ModelOps.toDisplayModels(octree, List()).foreach(m => worldRoot.getChildren.add(m))
     //scaledOctreeBoxes.foreach(b => worldRoot.getChildren.add(b))
 
@@ -170,10 +164,10 @@ class Main extends Application {
 
 }
 
-object FxApp {
+object CLIApp {
 
   def main(args: Array[String]): Unit = {
-    Application.launch(classOf[Main], args: _*)
+    Application.launch(classOf[CLI], args: _*)
   }
 }
 
