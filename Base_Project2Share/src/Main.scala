@@ -164,10 +164,10 @@ class Main extends Application {
 
 }
 
-object CLIApp {
+object FxApp {
 
   def main(args: Array[String]): Unit = {
-    Application.launch(classOf[CLI], args: _*)
+    Application.launch(classOf[Main], args: _*)
   }
 }
 

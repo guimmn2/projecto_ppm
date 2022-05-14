@@ -117,17 +117,16 @@ object CLIUtils {
   }
   private def generateOctree(fileNr: Int, scale: Double, colourOp: Int): Octree[Placement] = OctreeOps.scaleOctree(generateOctree(fileNr, colourOp), scale)
 
-  def generateOctreeFromUserInput() {
+  def generateOctreeFromUserInput(): Octree[Placement] = {
     val fileNr = getAndHandlefileSelection()
     val opArgs = getAndHandleOpSelection()
-    val octree = opArgs match {
+    opArgs match {
       case (scale, colourOp) =>
         if (scale == -1 && colourOp == -1) generateOctree(fileNr)
-        if (scale == -1 && colourOp != -1) generateOctree(fileNr, colourOp)
-        if (scale != -1 && colourOp == 1) generateOctree(fileNr, scale)
-        if (scale != -1 && colourOp != -1) generateOctree(fileNr, scale, colourOp)
+        else if (scale == -1 && colourOp != -1) generateOctree(fileNr, colourOp)
+        else if (scale != -1 && colourOp == 1) generateOctree(fileNr, scale)
+        else generateOctree(fileNr, scale, colourOp)
     }
-    println("launching app")
   }
 
   def main(args: Array[String]) = {
