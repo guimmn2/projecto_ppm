@@ -141,10 +141,10 @@ class Main extends Application {
     stage.setScene(scene)
 
     println("escolha o ficheiro: ")
-    CLI.printFiles
+    CLI.promptFileOptions()
     print("-> ")
 
-    val octree = CLI.selectFile()
+    val octree = CLI.generateOctreeFromFileNr(1)
     val scaledOctree = OctreeOps.scaleOctree(2, octree)
     val scaledOctreeV2 = OctreeOps.scaleOctreeV2(octree, 0.5)
     val octreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
