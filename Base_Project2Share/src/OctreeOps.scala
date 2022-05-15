@@ -7,13 +7,11 @@ import scala.annotation.tailrec
 object OctreeOps {
 
   def generateOctree(root: Placement, list: List[Node], maxDepth: Int): Octree[Placement] = {
-    println(s"root: ${root}")
     if (maxDepth == 0 || !ModelOps.areModelsWithin(list, ModelOps.createBox(root))) OcEmpty
     else {
       val appropriateModels = ModelOps.filterAppropriateModelsForPlacement(list, root)
       appropriateModels match {
         case x :: y => {
-          ModelOps.printModels(x :: y ++ ModelOps.getRestOfModelsThatFit(x::y, list, ModelOps.createBox(root)));
           OcLeaf(root, x :: y ++ ModelOps.getRestOfModelsThatFit(x::y, list, ModelOps.createBox(root)))
         }
         case List() => OcNode[Placement](

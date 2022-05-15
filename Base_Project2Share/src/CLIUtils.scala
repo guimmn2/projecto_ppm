@@ -13,10 +13,9 @@ object CLIUtils {
       println(s"${i} - ${f.getName.replaceFirst("^ \\.", "")}")
       i = i + 1
     })
-    println("0 - quit")
     print("-> ")
     val selected = readInt()
-    if(selected < 0 || selected > getConfigFiles.length) {
+    if(selected <= 0 || selected > getConfigFiles.length) {
       println("invalid file number")
       getAndHandlefileSelection()
     }
@@ -34,7 +33,7 @@ object CLIUtils {
   def getAndHandleOpSelection(): (Double, Int) = {
     val answer = validateAndReturnInput("do you wish to transform this octree?")
     if(answer == 1) {
-      print("choose operation:\n1 - scale\n2 - colour")
+      print("choose operation:\n1 - scale\n2 - colour\n")
       print("-> ")
       val selected = readInt()
       if(selected == 0) return (-1,-1)
@@ -65,13 +64,14 @@ object CLIUtils {
         }
       }
     } else {
-      return(-1, -1)
+      (-1, -1)
     }
   }
 
   private def validateAndReturnInput(prompt: String): Int = {
     println(prompt)
-    println("1 - yes\n2 - no")
+    print("1 - yes\n2 - no\n")
+    print("-> ")
     val selected = readInt()
     if(selected < 1 || selected > 2) {
       println("invalid option")
@@ -124,7 +124,7 @@ object CLIUtils {
       case (scale, colourOp) =>
         if (scale == -1 && colourOp == -1) generateOctree(fileNr)
         else if (scale == -1 && colourOp != -1) generateOctree(fileNr, colourOp)
-        else if (scale != -1 && colourOp == 1) generateOctree(fileNr, scale)
+        else if (scale != -1 && colourOp == -1) generateOctree(fileNr, scale)
         else generateOctree(fileNr, scale, colourOp)
     }
   }
