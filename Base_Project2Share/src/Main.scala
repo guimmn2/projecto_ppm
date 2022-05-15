@@ -75,6 +75,15 @@ class Main extends Application {
     cylinder1.setScaleZ(2)
     cylinder1.setMaterial(greenMaterial)
 
+    val cylinder2 = new Cylinder(0.5, 1, 10)
+    cylinder1.setTranslateX(6)
+    cylinder1.setTranslateY(2)
+    cylinder1.setTranslateZ(2)
+    cylinder1.setScaleX(2)
+    cylinder1.setScaleY(2)
+    cylinder1.setScaleZ(2)
+    cylinder1.setMaterial(redMaterial)
+
     val box1 = new Box(1, 1, 1)  //
     box1.setTranslateX(5)
     box1.setTranslateY(5)
@@ -144,9 +153,12 @@ class Main extends Application {
     val octreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
     val scaledOctreeBoxes = ModelOps.generateBoundingBoxes(scaledOctree, List())
 
-    ModelOps.toDisplayAll(scaledOctree).foreach(m => worldRoot.getChildren.add(m))
+    //ModelOps.toDisplayAll(scaledOctree).foreach(m => worldRoot.getChildren.add(m))
    // ModelOps.toDisplayModels(octree, List()).foreach(m => worldRoot.getChildren.add(m))
     //scaledOctreeBoxes.foreach(b => worldRoot.getChildren.add(b))
+
+    worldRoot.getChildren.add(cylinder1)
+    worldRoot.getChildren.add(cylinder2)
 
     stage.show
 
