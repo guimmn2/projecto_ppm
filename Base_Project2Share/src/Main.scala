@@ -129,24 +129,15 @@ class Main extends Application {
 
     val scene = new Scene(root, 810, 610, true, SceneAntialiasing.BALANCED)
 
-    //Mouse left click interaction
-    scene.setOnMouseClicked((event) => {
-      camVolume.setTranslateX(camVolume.getTranslateX + 2)
-      worldRoot.getChildren.removeAll()
-    })
+    val octree = OctreeOps.generateDefaultOctree(FileReader.createShapesFromFile("./conf.txt"))
+    val scaledOctree = OctreeOps.scaleOctree(octree, 5)
 
+
+    ModelOps.toDisplayAll(scaledOctree).foreach(m => worldRoot.getChildren.add(m))
     //setup and start the Stage
     stage.setTitle("PPM Project 21/22")
     stage.setScene(scene)
 
-    val octree = OctreeOps.generateDefaultOctree(FileReader.createShapesFromFile("./conf.txt"))
-    val scaledOctree = OctreeOps.scaleOctree(octree, 2)
-    val octreeBoxes = ModelOps.generateBoundingBoxes(octree, List())
-    val scaledOctreeBoxes = ModelOps.generateBoundingBoxes(scaledOctree, List())
-
-    ModelOps.toDisplayAll(scaledOctree).foreach(m => worldRoot.getChildren.add(m))
-   // ModelOps.toDisplayModels(octree, List()).foreach(m => worldRoot.getChildren.add(m))
-    //scaledOctreeBoxes.foreach(b => worldRoot.getChildren.add(b))
 
     stage.show
 

@@ -24,6 +24,9 @@ class CLI extends Application {
     val blueMaterial = new PhongMaterial()
     blueMaterial.setDiffuseColor(Color.rgb(0,0,150))
 
+    val whiteMaterial = new PhongMaterial()
+    whiteMaterial.setDiffuseColor(Color.rgb(255, 255, 255))
+
     //3D objects
     val lineX = new Line(0, 0, 200, 0)
     lineX.setStroke(Color.GREEN)
@@ -99,6 +102,21 @@ class CLI extends Application {
     val octree = CLIUtils.generateOctreeFromUserInput()
     //send octree components to the world
     ModelOps.toDisplayAll(octree.asInstanceOf[Octree[Placement]]).foreach(x => worldRoot.getChildren.add(x))
+
+    //Spaghet
+    var oldIntersectedBoxes: List[Box] = Nil
+    //Mouse left click interaction
+    scene.setOnMouseClicked((event) => {
+      if(oldIntersectedBoxes != Nil) oldIntersectedBoxes.foreach(b => worldRoot.getChildren.remove(b))
+      camVolume.setTranslateX(camVolume.getTranslateX + 2)
+      val intersectedBoxes = ModelOps.getPartitionCoordsInCameraExceptRoot(octree, camVolume)
+      intersectedBoxes.foreach(b => {
+        b.setMaterial(whiteMaterial)
+        worldRoot.getChildren.add(b)
+      })
+      oldIntersectedBoxes = intersectedBoxes
+      worldRoot.getChildren.removeAll()
+    })
 
     stage.show()
   }

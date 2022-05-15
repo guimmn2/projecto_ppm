@@ -2,6 +2,7 @@ import Types._
 import javafx.scene.Node
 import javafx.scene.paint.{Color, PhongMaterial}
 import javafx.scene.shape.{Box, Cylinder, DrawMode, Shape3D}
+import javafx.scene.transform.Rotate
 
 object ModelOps {
 
@@ -71,6 +72,34 @@ object ModelOps {
   }
 
   def filterAppropriateModelsForPlacement(list: List[Node], placement: Placement): List[Node] = list.filter(m => isModelInAppropriatePlacement(m, placement) == true)
+
+  def getPartitionCoordsInCamera(octree: Octree[Placement], cylinder: Cylinder): List[Box] = {
+    octree match {
+      case OcLeaf(section: Section) => if (intersects(cylinder, createBox(section._1))) List(createBox(section._1)) else Nil
+      case OcEmpty => Nil
+      case OcNode(coords, up_00, up_01, up_10, up_11, down_00, down_01, down_10, down_11) =>
+        if (intersects(cylinder, createBox(coords))) {
+          createBox(coords) ::
+            getPartitionCoordsInCamera(up_00, cylinder) ++
+              getPartitionCoordsInCamera(up_01, cylinder) ++
+              getPartitionCoordsInCamera(up_10, cylinder) ++
+              getPartitionCoordsInCamera(up_11, cylinder) ++
+              getPartitionCoordsInCamera(down_00, cylinder) ++
+              getPartitionCoordsInCamera(down_01, cylinder) ++
+              getPartitionCoordsInCamera(down_10, cylinder) ++
+              getPartitionCoordsInCamera(down_11, cylinder)
+        } else {
+          Nil
+        }
+    }
+  }
+
+  def getPartitionCoordsInCameraExceptRoot(octree: Octree[Placement], cylinder: Cylinder): List[Box] = {
+    getPartitionCoordsInCamera(octree, cylinder) match {
+      case _ :: xy => xy
+      case Nil => Nil
+    }
+  }
 
   def generateBoundingBoxes(octree: Octree[Placement], list: List[Box]): List[Box] = {
     octree match {
@@ -188,5 +217,6 @@ object ModelOps {
     })
   }
 
-  def main(args: Array[String]) = println(log2(32.0))
+  def main(args: Array[String]) = {
+  }
 }
