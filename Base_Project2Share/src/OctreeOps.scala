@@ -6,6 +6,13 @@ import scala.annotation.tailrec
 
 object OctreeOps {
 
+  /**
+   * creates an octree. if the objects do not fit within the octree, they are discarded.
+   * @param root
+   * @param list
+   * @param maxDepth
+   * @return octree
+   */
   def generateOctree(root: Placement, list: List[Node], maxDepth: Int): Octree[Placement] = {
     if (maxDepth == 0 || !ModelOps.areModelsWithin(list, ModelOps.createBox(root))) OcEmpty
     else {
@@ -29,20 +36,43 @@ object OctreeOps {
     }
   }
 
-  //calculates max depth
+  /**
+   * applies function above, but calculates appropriate max depth
+   * @param root
+   * @param list
+   * @return octree
+   */
   def generateOctree(root: Placement, list: List[Node]): Octree[Placement] = generateOctree(root, list, root._2.toInt)
-  //default 32
+
+  /**
+   * generates an octree with the default size of 32
+   * @param list
+   * @return octree
+   */
   def generateDefaultOctree(list: List[Node]): Octree[Placement] = generateOctree(((0.0,0.0,0.0), 32), list, 6)
 
+  /**
+   * gathers all the models of an octree, scaling them to the given factor
+   * gets the octree root size and multiplies it by the given factor;
+   * generates new octree based on this data.
+   * @param octree
+   * @param factor
+   * @return octree
+   */
   def scaleOctree(octree: Octree[Placement], factor: Double): Octree[Placement] = {
     val models = getModelListFromOctree(octree, List())
     val scaledModels = ModelOps.scale3dModels(models, factor)
     val root = octree.asInstanceOf[OcNode[Placement]].coords
     val scaledSize = root._2 * factor
-    println(s"${(ModelOps.log2(scaledSize) + 1.0).toInt}")
     generateOctree((root._1, scaledSize), scaledModels, (ModelOps.log2(scaledSize) + 1.0).toInt)
   }
 
+  /**
+   * traverses the octree collecting all models in a list
+   * @param octree
+   * @param list
+   * @return list of models
+   */
   private def getModelListFromOctree(octree: Octree[Placement], list: List[Node]): List[Node] = {
     octree match {
       case OcLeaf(section: Section) => section._2
@@ -59,13 +89,16 @@ object OctreeOps {
     }
   }
 
+  /**
+   * traverses the octree creating new models of a leaf and applying the given colour effect function
+   * @param func
+   * @param octree
+   * @return
+   */
   def mapColourEffect(func: Color => Color)(octree: Octree[Placement]): Octree[Placement] = {
     octree match {
       case OcLeaf(section: Section) => {
-        //creates new list of models from existing models in leaf and applies colour effect
         val alteredModels = (section._2 foldRight List[Node]()) ((cur, next) => ModelOps.applyColourEffect(func)(ModelOps.createModelFromNode(cur)) :: next)
-        println("mapColourEffect")
-        ModelOps.printModels(alteredModels)
         OcLeaf(section._1, alteredModels)
       }
       case OcEmpty => OcEmpty
