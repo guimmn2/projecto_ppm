@@ -39,7 +39,7 @@ class Main extends Application {
     val scene = new Scene(mainViewRoot)
     val myController:MenuFile = fxmlLoader.getController()
 
-    var myList = CLI.getListOfFiles(new File("."), List("txt"))
+    var myList = CLIUtils.getConfigFiles
     myList.foreach(file => myController.listView1.getItems().add(file))
 
     stage.setTitle("PPM Project 21/22 - Select File Menu")

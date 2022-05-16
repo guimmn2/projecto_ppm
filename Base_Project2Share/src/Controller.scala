@@ -52,7 +52,7 @@ class Controller {
     InitSubScene.worldRoot.getChildren.add(InitSubScene.lineZ)
     InitSubScene.worldRoot.getChildren.add(InitSubScene.camVolume)
     val octree = originalOct
-    val scaledOctree = OctreeOps.scaleOctreeV2(octree,s1.getValue)
+    val scaledOctree = OctreeOps.scaleOctree(octree,s1.getValue)
     ModelOps.toDisplayAll(scaledOctree).foreach(m => InitSubScene.worldRoot.getChildren.add(m))
     changedOct = scaledOctree
   }
