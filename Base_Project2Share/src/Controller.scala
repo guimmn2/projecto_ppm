@@ -59,14 +59,27 @@ class Controller {
 
   @FXML
   def greenRemoveSelected():Unit = {
-    val newOctree = OctreeOps.greenRemove(changedOct)
-    ModelOps.toDisplayAll(newOctree).foreach(m => InitSubScene.worldRoot.getChildren.add(m))
+    var newOctree:Octree[Placement] = null
+    if(changedOct == null){
+      newOctree = OctreeOps.greenRemove(originalOct)
+      ModelOps.toDisplayAll(newOctree).foreach(m => InitSubScene.worldRoot.getChildren.add(m))
+    }else {
+      newOctree = OctreeOps.greenRemove(changedOct)
+      ModelOps.toDisplayAll(newOctree).foreach(m => InitSubScene.worldRoot.getChildren.add(m))
+    }
+
   }
 
   @FXML
   def sepiaSelected():Unit = {
-    val newOctree = OctreeOps.sepia(changedOct)
-    ModelOps.toDisplayAll(newOctree).foreach(m => InitSubScene.worldRoot.getChildren.add(m))
+    var newOctree:Octree[Placement] = null
+    if(changedOct == null){
+      newOctree = OctreeOps.sepia(originalOct)
+      ModelOps.toDisplayAll(newOctree).foreach(m => InitSubScene.worldRoot.getChildren.add(m))
+    }else {
+      newOctree = OctreeOps.sepia(changedOct)
+      ModelOps.toDisplayAll(newOctree).foreach(m => InitSubScene.worldRoot.getChildren.add(m))
+    }
   }
 
 
