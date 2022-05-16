@@ -2,6 +2,7 @@ import Types._
 import javafx.scene.Node
 import javafx.scene.paint.{Color, PhongMaterial}
 import javafx.scene.shape.{Box, Cylinder, DrawMode, Shape3D}
+import javafx.scene.transform.Rotate
 
 object ModelOps {
 
@@ -72,6 +73,34 @@ object ModelOps {
 
   def filterAppropriateModelsForPlacement(list: List[Node], placement: Placement): List[Node] = list.filter(m => isModelInAppropriatePlacement(m, placement) == true)
 
+  def getPartitionCoordsInCamera(octree: Octree[Placement], cylinder: Cylinder): List[Box] = {
+    octree match {
+      case OcLeaf(section: Section) => if (intersects(cylinder, createBox(section._1))) List(createBox(section._1)) else Nil
+      case OcEmpty => Nil
+      case OcNode(coords, up_00, up_01, up_10, up_11, down_00, down_01, down_10, down_11) =>
+        if (intersects(cylinder, createBox(coords))) {
+          createBox(coords) ::
+            getPartitionCoordsInCamera(up_00, cylinder) ++
+              getPartitionCoordsInCamera(up_01, cylinder) ++
+              getPartitionCoordsInCamera(up_10, cylinder) ++
+              getPartitionCoordsInCamera(up_11, cylinder) ++
+              getPartitionCoordsInCamera(down_00, cylinder) ++
+              getPartitionCoordsInCamera(down_01, cylinder) ++
+              getPartitionCoordsInCamera(down_10, cylinder) ++
+              getPartitionCoordsInCamera(down_11, cylinder)
+        } else {
+          Nil
+        }
+    }
+  }
+
+  def getPartitionCoordsInCameraExceptRoot(octree: Octree[Placement], cylinder: Cylinder): List[Box] = {
+    getPartitionCoordsInCamera(octree, cylinder) match {
+      case _ :: xy => xy
+      case Nil => Nil
+    }
+  }
+
   def generateBoundingBoxes(octree: Octree[Placement], list: List[Box]): List[Box] = {
     octree match {
       case OcEmpty => Nil
@@ -79,13 +108,13 @@ object ModelOps {
       case OcNode(root, a, b, c, d, e, f, g, h) =>
         createBox(root) ::
           generateBoundingBoxes(a, list) ++
-          generateBoundingBoxes(b, list) ++
-          generateBoundingBoxes(c, list) ++
-          generateBoundingBoxes(d, list) ++
-          generateBoundingBoxes(e, list) ++
-          generateBoundingBoxes(f, list) ++
-          generateBoundingBoxes(g, list) ++
-          generateBoundingBoxes(h, list)
+            generateBoundingBoxes(b, list) ++
+            generateBoundingBoxes(c, list) ++
+            generateBoundingBoxes(d, list) ++
+            generateBoundingBoxes(e, list) ++
+            generateBoundingBoxes(f, list) ++
+            generateBoundingBoxes(g, list) ++
+            generateBoundingBoxes(h, list)
     }
   }
 
@@ -103,11 +132,21 @@ object ModelOps {
 
   //color funcs
   val curryGreenRemove = applyColourEffect(greenRemove)(_)
+  val currySepia = applyColourEffect(sepia)(_)
+
   def greenRemove(c: Color): Color = Color.rgb((c.getRed * 255).toInt, 0, (c.getBlue * 255).toInt)
+
+  def sepia(c: Color): Color = {
+    Color.rgb(
+      (c.getRed * 255 * 0.4 + c.getGreen * 255 * 0.77 + c.getBlue * 255 * 0.2).toInt,
+      (c.getRed * 255 * 0.35 + c.getGreen * 255 * 0.69 + c.getBlue * 255 * 0.17).toInt,
+      (c.getRed * 255 * 0.27 + c.getGreen * 255 * 0.53 + c.getBlue * 255 * 0.13).toInt
+    )
+  }
 
   //we did this because we were having trouble with pointers. Wasn't creating a new value equal to the Nodes we wanted ...
   def createModelFromNode(node: Node): Node = {
-    if(node.isInstanceOf[Cylinder]) {
+    if (node.isInstanceOf[Cylinder]) {
       val data = node.asInstanceOf[Cylinder]
       val coords = (data.getTranslateX, data.getTranslateY, data.getTranslateZ)
       val scale = (data.getScaleX, data.getScaleY, data.getScaleZ)
@@ -178,5 +217,6 @@ object ModelOps {
     })
   }
 
-  def main(args: Array[String]) = println(log2(32.0))
+  def main(args: Array[String]) = {
+  }
 }

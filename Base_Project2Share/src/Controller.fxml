@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="ap1" prefHeight="798.0" prefWidth="816.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+   <children>
+      <SubScene fx:id="subScene1" height="830.0" layoutX="417.0" width="405.0">
+        <root>
+          <Region />
+        </root>
+      </SubScene>
+      <TabPane prefHeight="830.0" prefWidth="413.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab fx:id="tabHome" text="Home">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="40.0" layoutY="126.0" prefHeight="802.2261135673892" prefWidth="413.2174050112983" text="Projecto PPM - 21/22" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <font>
+                              <Font size="19.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="91.0" fitWidth="250.0" layoutX="82.0" layoutY="310.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@iscte.png" />
+                           </image>
+                        </ImageView>
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+          <Tab fx:id="tabScale" text="Scale Method">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                         <Slider fx:id="s1" blockIncrement="0.5" cache="true" layoutX="14.0" layoutY="128.0" majorTickUnit="0.5" max="2.0" min="0.5" minorTickCount="0" onMouseReleased="#onSliderChanged" prefHeight="48.0" prefWidth="385.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="0.5" />
+                        <Label layoutX="14.0" layoutY="54.0" prefHeight="57.0" prefWidth="362.0" text="Scaling factor:">
+                           <font>
+                              <Font name="JetBrains Mono Medium" size="21.0" />
+                           </font>
+                        </Label>
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+            <Tab fx:id="tabColour" text="Colour Method">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="buttonGR" layoutX="25.0" layoutY="91.0" mnemonicParsing="false" onMouseClicked="#greenRemoveSelected" text="Green Remove" />
+                        <Button fx:id="buttonSepia" layoutX="25.0" layoutY="138.0" mnemonicParsing="false" onMouseClicked="#sepiaSelected" text="Sepia" />
+                     </children></AnchorPane>
+                </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>
