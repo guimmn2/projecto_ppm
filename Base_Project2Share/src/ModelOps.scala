@@ -2,6 +2,7 @@ import Types._
 import javafx.scene.Node
 import javafx.scene.paint.{Color, PhongMaterial}
 import javafx.scene.shape.{Box, Cylinder, DrawMode, Shape3D}
+import javafx.scene.transform.Rotate
 
 object ModelOps {
 
@@ -26,7 +27,11 @@ object ModelOps {
 
   def intersects(model: Node, box: Box): Boolean = !isWithin(model, box) && model.asInstanceOf[Shape3D].getBoundsInParent.intersects(box.getBoundsInParent)
 
-  def filterModelsWithin(list: List[Node], box: Box): List[Node] = list.filter(m => isWithin(m, box))
+  def getRestOfModelsThatFit(referenceModels: List[Node], allModels: List[Node], box: Box): List[Node] = {
+    allModels.filter(model => !referenceModels.contains(model) && isWithin(model, box))
+  }
+
+  def filterModelsWithin(models: List[Node], box: Box) = models.filter(m => isWithin(m, box))
 
   def areModelsWithin(list: List[Node], box: Box): Boolean = !filterModelsWithin(list, box).equals(List())
 
@@ -67,6 +72,34 @@ object ModelOps {
   }
 
   def filterAppropriateModelsForPlacement(list: List[Node], placement: Placement): List[Node] = list.filter(m => isModelInAppropriatePlacement(m, placement) == true)
+
+  def getPartitionCoordsInCamera(octree: Octree[Placement], cylinder: Cylinder): List[Box] = {
+    octree match {
+      case OcLeaf(section: Section) => if (intersects(cylinder, createBox(section._1))) List(createBox(section._1)) else Nil
+      case OcEmpty => Nil
+      case OcNode(coords, up_00, up_01, up_10, up_11, down_00, down_01, down_10, down_11) =>
+        if (intersects(cylinder, createBox(coords))) {
+          createBox(coords) ::
+            getPartitionCoordsInCamera(up_00, cylinder) ++
+              getPartitionCoordsInCamera(up_01, cylinder) ++
+              getPartitionCoordsInCamera(up_10, cylinder) ++
+              getPartitionCoordsInCamera(up_11, cylinder) ++
+              getPartitionCoordsInCamera(down_00, cylinder) ++
+              getPartitionCoordsInCamera(down_01, cylinder) ++
+              getPartitionCoordsInCamera(down_10, cylinder) ++
+              getPartitionCoordsInCamera(down_11, cylinder)
+        } else {
+          Nil
+        }
+    }
+  }
+
+  def getPartitionCoordsInCameraExceptRoot(octree: Octree[Placement], cylinder: Cylinder): List[Box] = {
+    getPartitionCoordsInCamera(octree, cylinder) match {
+      case _ :: xy => xy
+      case Nil => Nil
+    }
+  }
 
   def generateBoundingBoxes(octree: Octree[Placement], list: List[Box]): List[Box] = {
     octree match {
@@ -121,8 +154,8 @@ object ModelOps {
       val material = data.getMaterial
       val cylinder = new Cylinder(dimensions._1, dimensions._2, dimensions._3)
       cylinder.setTranslateX(coords._1)
-      cylinder.setTranslateY(coords._1)
-      cylinder.setTranslateZ(coords._1)
+      cylinder.setTranslateY(coords._2)
+      cylinder.setTranslateZ(coords._3)
       cylinder.setScaleX(scale._1)
       cylinder.setScaleY(scale._2)
       cylinder.setScaleZ(scale._3)
@@ -136,8 +169,8 @@ object ModelOps {
       val material = data.getMaterial
       val box = new Box(dimensions._1, dimensions._2, dimensions._3)
       box.setTranslateX(coords._1)
-      box.setTranslateY(coords._1)
-      box.setTranslateZ(coords._1)
+      box.setTranslateY(coords._2)
+      box.setTranslateZ(coords._3)
       box.setScaleX(scale._1)
       box.setScaleY(scale._2)
       box.setScaleZ(scale._3)
@@ -145,6 +178,8 @@ object ModelOps {
       box
     }
   }
+
+  def log2(x: Double) = Math.log10(x)/Math.log10(2.0)
 
   def printModels(list: List[Node]): Unit = list.foreach(m => println(s"class: ${m.getClass}" +
     s" color: { red: ${getColor(m).getRed * 255}, green: ${getColor(m).getGreen * 255},  blue: ${getColor(m).getBlue * 255} }"))
@@ -165,8 +200,23 @@ object ModelOps {
     }
   }
 
-  def toDisplayAll(oct:Octree[Placement]):List[Node] = {
+  def toDisplayAll(oct:Octree[Placement]): List[Node] = {
     toDisplayModels(oct,List()) ++ generateBoundingBoxes(oct,List())
   }
 
+  def scale3dModels(list: List[Node], factor: Double) = {
+    list.map(m => {
+      val newModel = createModelFromNode(m)
+      newModel.setScaleX(m.getScaleX * factor)
+      newModel.setScaleY(m.getScaleY * factor)
+      newModel.setScaleZ(m.getScaleZ * factor)
+      newModel.setTranslateX(m.getTranslateX * factor)
+      newModel.setTranslateY(m.getTranslateY * factor)
+      newModel.setTranslateZ(m.getTranslateZ * factor)
+      newModel
+    })
+  }
+
+  def main(args: Array[String]) = {
+  }
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="CENTER" prefHeight="439.0" prefWidth="266.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MenuFile">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints maxHeight="65.36521800050215" minHeight="10.0" prefHeight="29.365219907850786" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="380.75653110194116" minHeight="344.7565330092898" prefHeight="360.4956648286128" />
+      <RowConstraints maxHeight="49.382609637139694" minHeight="33.382609637139694" prefHeight="49.382609637139694" valignment="CENTER" />
+   </rowConstraints>
+   <children>
+      <ListView fx:id="listView1" prefHeight="339.0" prefWidth="194.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+      <Button fx:id="button1" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#OnButton1Clicked" prefHeight="28.0" prefWidth="65.0" text="OK" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+      <Label text="File name:" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM" />
+   </children>
+</GridPane>
