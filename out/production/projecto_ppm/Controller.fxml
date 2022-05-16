@@ -8,7 +8,7 @@
 
 <AnchorPane fx:id="ap1" prefHeight="798.0" prefWidth="816.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
    <children>
-      <SubScene fx:id="subScene1" height="830.0" layoutX="417.0" width="405.0">
+      <SubScene fx:id="subScene1" height="830.0" layoutX="417.0" onMouseClicked="#changeColor" width="405.0">
         <root>
           <Region />
         </root>

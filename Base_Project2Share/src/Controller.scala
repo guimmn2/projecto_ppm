@@ -7,6 +7,7 @@ import javafx.fxml.{FXML, FXMLLoader}
 import javafx.scene.control.{Button, RadioButton, Slider, Tab, TabPane, ToggleGroup}
 import javafx.scene.{Parent, Scene, SubScene}
 import javafx.scene.layout.{AnchorPane, HBox, VBox}
+import javafx.scene.shape.Box
 class Controller {
 
   @FXML
@@ -82,6 +83,31 @@ class Controller {
     }
   }
 
+  var oldIntersectedBoxes: List[Box] = Nil
+  @FXML
+  def changeColor():Unit = {
+    if(changedOct == null){
+        if(oldIntersectedBoxes != Nil) oldIntersectedBoxes.foreach(b => InitSubScene.worldRoot.getChildren.remove(b))
+        InitSubScene.camVolume.setTranslateX(InitSubScene.camVolume.getTranslateX + 2)
+        val intersectedBoxes = ModelOps.getPartitionCoordsInCameraExceptRoot(originalOct, InitSubScene.camVolume)
+        intersectedBoxes.foreach(b => {
+          b.setMaterial(InitSubScene.whiteMaterial)
+          InitSubScene.worldRoot.getChildren.add(b)
+        })
+        oldIntersectedBoxes = intersectedBoxes
+        InitSubScene.worldRoot.getChildren.removeAll()
+    }else{
+        if(oldIntersectedBoxes != Nil) oldIntersectedBoxes.foreach(b => InitSubScene.worldRoot.getChildren.remove(b))
+        InitSubScene.camVolume.setTranslateX(InitSubScene.camVolume.getTranslateX + 2)
+        val intersectedBoxes = ModelOps.getPartitionCoordsInCameraExceptRoot(changedOct, InitSubScene.camVolume)
+        intersectedBoxes.foreach(b => {
+          b.setMaterial(InitSubScene.whiteMaterial)
+          InitSubScene.worldRoot.getChildren.add(b)
+        })
+        oldIntersectedBoxes = intersectedBoxes
+        InitSubScene.worldRoot.getChildren.removeAll()
+  }
+  }
 
   //method automatically invoked after the @FXML fields have been injected
   @FXML
@@ -92,5 +118,7 @@ class Controller {
     subScene1.widthProperty.bind(ap1.widthProperty.subtract(400))
     subScene1.heightProperty.bind(ap1.heightProperty)
   }
+
+
 }
 
