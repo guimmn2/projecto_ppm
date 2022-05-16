@@ -107,6 +107,8 @@ object OctreeOps {
 
   //curried greenRemove for octree
   val greenRemove = mapColourEffect(ModelOps.greenRemove)(_)
+  val sepia = mapColourEffect(ModelOps.sepia)(_)
+
 
   def main(args: Array[String]): Unit = {
     val octree = generateDefaultOctree(FileReader.createShapesFromFile("./conf2.txt"))

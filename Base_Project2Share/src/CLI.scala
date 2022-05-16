@@ -18,7 +18,7 @@ object CLI {
 
   val getConfigFiles = getListOfFiles(new File("."), List("txt"))
 
-  private def getListOfFiles(dir: File, extensions: List[String]): List[File] = {
+   def getListOfFiles(dir: File, extensions: List[String]): List[File] = {
     dir.listFiles.filter(_.isFile).toList.filter { file =>
       extensions.exists(file.getName.endsWith(_))
     }

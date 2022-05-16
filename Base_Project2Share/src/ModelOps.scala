@@ -8,6 +8,28 @@ object ModelOps {
   val purpleMaterial = new PhongMaterial()
   purpleMaterial.setDiffuseColor(Color.rgb(150, 0, 150))
 
+  //T3
+  /*
+  def ModelsOnCamera(oc:Octree[Placement],camera:Cylinder):List[Placement] = {
+    oc match {
+      case OcEmpty => Nil
+      case OcLeaf(section: Section) =>
+        val box = createBox(section._1)
+        if (camera.asInstanceOf[Shape3D].getBoundsInParent.intersects(box.getBoundsInParent)) {
+          List(section._1)
+        } else {
+          Nil
+        }
+      case OcNode(root, oc1, oc2, oc3, oc4, oc5, oc6, oc7, oc8) =>
+        if (intersects(camera, createBox(root))) {
+          List(root) ++
+            ModelsOnCamera(oc1, camera)
+        }else{
+          Nil
+        }
+    }
+  }
+*/
   def createBox(placement: Placement): Box = {
     val size = placement._2
     val x = placement._1._1;
@@ -104,6 +126,15 @@ object ModelOps {
   //color funcs
   val curryGreenRemove = applyColourEffect(greenRemove)(_)
   def greenRemove(c: Color): Color = Color.rgb((c.getRed * 255).toInt, 0, (c.getBlue * 255).toInt)
+
+  def sepia(c: Color): Color = {
+    Color.rgb(
+      (c.getRed * 255 * 0.4 + c.getGreen * 255 * 0.77 + c.getBlue * 255 * 0.2).toInt,
+      (c.getRed * 255 * 0.35 + c.getGreen * 255 * 0.69 + c.getBlue * 255 * 0.17).toInt,
+      (c.getRed * 255 * 0.27 + c.getGreen * 255 * 0.53 + c.getBlue * 255 * 0.13).toInt
+    )
+  }
+
 
   //we did this because we were having trouble with pointers. Wasn't creating a new value equal to the Nodes we wanted ...
   def createModelFromNode(node: Node): Node = {
